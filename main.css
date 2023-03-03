@@ -1,0 +1,13 @@
+body{
+    background-color: rgb(41, 41, 41);
+    color: white;
+    font-family: sans-serif;
+}
+
+.file-input-csv{
+    background-color: rgb(15, 17, 43);
+    
+    padding: 10px;
+    border-radius: 3px;
+
+}

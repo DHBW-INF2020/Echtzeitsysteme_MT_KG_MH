@@ -1,4 +1,7 @@
 ActionID;Action;ActionTaskAssignment;ActionSteps;TaskID;TaskName;SemaphoreID;Startpunkt;Endpunkt;Initialisierungsvar;MutexID;ActionID;MutexID
 1;schneiden;1;3;1;Messer;1;1;3;1;1;1;1
-2;waschen;1;4;2;Löffel;2;1;2;0;2;3;1
-3;aufsetzen;2;1;3;Topf;;;;;3;;
+2;waschen;1;4;2;Loeffel;2;1;2;0;2;3;1
+3;ruehren;2;1;3;Topf;;;;;3;;
+4;hacken;1;;;;;;;;;;
+5;aufsetzen;3;;;;;;;;;;
+6;kochen lassen;3;;;;;;;;;;

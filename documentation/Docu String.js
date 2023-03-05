@@ -1,7 +1,7 @@
 /**
 * Function Name.  
-* Summary. (use period)
-*
+* Summary. 
+* (Summary here)
 *
 * @author.     Name
 *

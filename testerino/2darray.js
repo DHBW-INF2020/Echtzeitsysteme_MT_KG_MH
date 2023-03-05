@@ -174,6 +174,18 @@ function convertToObjectBaseValue(convertedCSVArray){
 
 //================================================================================================
 
+
+/**
+* Function Name.        createSemaphoreObjects() 
+* Summary.              
+* This Function creates all the Semaphores according to the List that is defined by the CSV
+* therefore it uses the converted CSV Data in the Array "semaphoreArray[]" to get all the necessary data
+*
+* The new objects are then saved inside the Semaphores[] Array
+* 
+* @author.     MH
+*
+*/
 function createSemaphoreObjects()
 {
     for(let i = 0; i < semaphoreArray.length; i++)
@@ -188,6 +200,18 @@ function createSemaphoreObjects()
     console.log("Semaphores", Semaphores)
 }
 
+
+/**
+* Function Name.        createMutexObjects() 
+* Summary.
+* This Function creates all the Semaphores according to the List that is defined by the CSV
+* therefore it uses the converted CSV Data in the Array "mutexArray[]" to get all the necessary data
+* 
+* The new objects are then saved inside the Mutexes[] Array
+*
+* @author.     MH
+*
+*/
 function createMutexObjects()
 {
     for (let i = 0; i < mutexArray.length; i++)
@@ -201,6 +225,16 @@ function createMutexObjects()
     console.log("Mutexes", Mutexes)
 }
 
+
+
+/**
+* Function Name.        createActionObjects() 
+* Summary.              
+* This Function wil create all Action Objects with their in and outgoing Connections
+*
+* @author.     MH
+*
+*/
 function createActionObjects()
 {
     for (let i = 0; i < actionArray.length; i++)
@@ -208,7 +242,10 @@ function createActionObjects()
         // check if empty
         if(!(actionArray[i][0]===""))
         {
-            // find all Semaphores that come into the Action
+            // find all Semaphores that come INTO an Action
+            //
+            // and add them to the semaphoresIn Array which will be used
+            // to create the "Action" Objects
             let semaphoresIn = [];
             for(let j = 0; j < semaphoreArray.length; j++)
             {
@@ -222,13 +259,65 @@ function createActionObjects()
                 }
             }
 
-            console.log("Semaphores in: ", semaphoresIn)
-
+            // find all Semaphores that come OUT of an Action
+            //
+            // and add them to the semaphoresOut Array which will be used
+            // to create the "Action" Objects
             let semaphoresOut = [];
+            for(let j = 0; j < semaphoreArray.length; j++)
+            {
+                if(!(semaphoreArray[j][0]===""))
+                {
+                    // semaphoreArray[j][2] => Endpoint of semaphore
+                    if(semaphoreArray[j][1] == actionArray[i][0])
+                    {
+                        semaphoresOut.push(Semaphores[j])
+                    }
+                }
+            }
 
+            // find all Semaphores that come OUT of an Action
+            //
+            // and add them to the mutexList Array which will be used
+            // to create the "Action" Objects
             let mutexList = [];
 
+            // loop over the fifth table from the CSV -> mutexActionArray
+            //
+            // in there find all Mutexes that have 
+            // a Connection to the Action that is currently created
+            for(let j = 0; j < mutexActionArray.length; j++)
+            {
+                // ignore empty rows
+                if(!(mutexActionArray[j][0]===""))
+                {
+                    // semaphoreArray[j][2] => Endpoint of semaphore
+                    if(mutexActionArray[j][0] == actionArray[i][0])
+                    {
+                        // loop through the already created Mutexes to find the one
+                        // that belongs to the Action according to the mutexActionArray
+                        for(let l = 0; l < Mutexes.length; l++)
+                        {
+                            // if Mutex belongs to Action append it to its Mutex List
+                            if(Mutexes[l].mutexID == mutexActionArray[j][1])
+                            {
+                                mutexList.push(Mutexes[l])
+                            }
+                        }
+                    }
+                }
+            }
+
             // get the semaphore ID and initial Value from the Semaphore Array
+            // Helper: 
+            // Action(
+            //    int: id, 
+            //    string: action_name, 
+            //    int: action_steps, 
+            //    Semaphore Array: semaphores_in, 
+            //    Semaphore Array:semaphores_out, 
+            //    Mutex Array:mutex_list
+            //    )
             Actions.push(new Action(parseInt(actionArray[i][0]),actionArray[i][1], parseInt(actionArray[i][3]),semaphoresIn, semaphoresOut, mutexList))
         }
     }

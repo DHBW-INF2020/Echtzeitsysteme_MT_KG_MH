@@ -57,7 +57,7 @@ $(document).ready(function()
                 var parsedData = $.csv.toArrays(csvData);
                 arrayFromCSV = parsedData;
                 console.log("Array has been updated from CSV");
-                console.log(arrayFromCSV);
+                console.log(arrayFromCSV[ [1]]);
             };
 
             // Read the selected file as text
@@ -67,3 +67,9 @@ $(document).ready(function()
 });
 
 //=============================================================================
+
+// create JS Objects from the Array
+
+let table = [];
+
+table.push = []

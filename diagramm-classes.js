@@ -1,3 +1,6 @@
+
+//=====================================================================================================================================
+
 class Task{
     constructor(id, task_name, actions)
     {
@@ -7,6 +10,19 @@ class Task{
     }
 }
 
+
+//=====================================================================================================================================
+
+
+// Helper: 
+// Action(
+//    int: id, 
+//    string: action_name, 
+//    int: action_steps, 
+//    Semaphore Array: semaphores_in, 
+//    Semaphore Array:semaphores_out, 
+//    Mutex Array:mutex_list
+//    )
 class Action{
     constructor(id, action_name, action_steps, semaphores_in, semaphores_out, mutex_list)
     {
@@ -113,6 +129,8 @@ class Action{
     }
 }
 
+//=====================================================================================================================================
+
 class Semaphore
 {
     constructor(id, semaphore_value)
@@ -125,15 +143,17 @@ class Semaphore
 
     up()
     {
-        this.semaphoreID = this.semaphoreID + 1;
+        this.semaphoreValue = this.semaphoreValue + 1;
     }
 
 
     down()
     {
-        this.semaphoreID = this.semaphoreID - 1;
+        this.semaphoreValue = this.semaphoreValue - 1;
     }
 }
+
+//=====================================================================================================================================
 
 class Mutex
 {

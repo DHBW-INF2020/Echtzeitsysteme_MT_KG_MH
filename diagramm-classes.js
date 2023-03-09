@@ -142,12 +142,14 @@ class SemaphoreGroup
 
 class Semaphore
 {
-    constructor(id, semaphore_value, semaphore_group)
+    constructor(id, semaphore_value, semaphore_group, starting_point, end_point)
     {
         // handle Input
         this.semaphoreID = id;
         this.semaphoreValue = semaphore_value;
         this.semaphoreGroup = semaphore_group;
+        this.startingpoint = starting_point;
+        this.endpoint = end_point;
     }
 
 

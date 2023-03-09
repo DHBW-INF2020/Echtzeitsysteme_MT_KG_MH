@@ -209,7 +209,15 @@ function createSemaphoreObjects()
         // get the semaphore ID and initial Value from the Semaphore Array
         Semaphores.push(new Semaphore(parseInt(semaphoreArray[i][0]),
                                       parseInt(semaphoreArray[i][4]),
-                                      parseInt(semaphoreArray[i][3])))
+                                      parseInt(semaphoreArray[i][3]),
+                                      parseInt(semaphoreArray[i][1]),
+                                      parseInt(semaphoreArray[i][2])))
+        console.log("Semaphore Werte:", 
+                    "ID:",parseInt(semaphoreArray[i][0]),
+                    "Value:", parseInt(semaphoreArray[i][4]),
+                    "Gruppe: ",parseInt(semaphoreArray[i][3]),
+                    "startwert: ",parseInt(semaphoreArray[i][1]),
+                    "endwert: ", parseInt(semaphoreArray[i][2]))
         }
     }
 
@@ -244,10 +252,10 @@ function createSemaphoreGroupObjects()
                 if(Semaphores[j].semaphoreGroup == parseInt(semaphoreGroupArray[i][0]))
                 {
                     tempArray.push(Semaphores[j]);
-                    
                 }
             }
-            // console.log("temp array: ", tempArray)
+
+            console.log("temp array: ", tempArray)
             SemaphoreGroups.push(new SemaphoreGroup(parseInt(semaphoreGroupArray[i][0]),tempArray))
         }
     }
@@ -302,6 +310,17 @@ function createActionObjects()
             // and add them to the semaphoreGroupIn Array which will be used
             // to create the "Action" Objects
             let semaphoreGroupIn = [];
+            for(let j = 0; j < SemaphoreGroups.length; j++)
+            {
+                for(let l = 0; l < SemaphoreGroups[j].semaphores.length; l++)
+                {
+                    if(SemaphoreGroups[j].semaphores[l].endpoint == actionArray[i][0])
+                    {
+                        semaphoreGroupIn.push(SemaphoreGroups[j]);
+                    }
+                }
+            }
+            /*
             for(let j = 0; j < semaphoreArray.length; j++)
             {
                 if(!(semaphoreArray[j][0]===""))
@@ -313,22 +332,19 @@ function createActionObjects()
                         semaphoreGroupIn.push(SemaphoreGroups[semaphoreArray[j][3] - 1]);
                     }
                 }
-            }
+            }*/
 
             // find all SemaphoreGroups that come OUT of an Action
             //
             // and add them to the semaphoreOut Array which will be used
             // to create the "Action" Objects
             let semaphoreOut = [];
-            for(let j = 0; j < semaphoreArray.length; j++)
+            for(let j = 0; j < Semaphores.length; j++)
             {
-                if(!(semaphoreArray[j][0]===""))
+                // semaphoreArray[j][2] => Endpoint of semaphore
+                if(Semaphores[j].startingpoint == actionArray[i][0])
                 {
-                    // semaphoreArray[j][2] => Endpoint of semaphore
-                    if(semaphoreArray[j][1] == actionArray[i][0])
-                    {
-                        semaphoreOut.push(SemaphoreGroups[j])
-                    }
+                    semaphoreOut.push(Semaphores[j]);
                 }
             }
 

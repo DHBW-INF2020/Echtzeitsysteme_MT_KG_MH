@@ -137,6 +137,42 @@ class SemaphoreGroup
         this.id = id;
         this.semaphores = semaphores;
     }
+
+    /**
+    * Function Name. combinedSemaphoreValue()  
+    * Summary. 
+    * This Function adds up all the Values of a Semaphore Group
+    * if return (tempValue) is > 0 the next Action can be triggered from this Semaphore  
+    *
+    * @author.     MH
+    *
+    */
+    combinedSemaphoreValue()
+    {
+        let tempValue = 0;
+        for(let i = 0; i < this.semaphores.length; i ++)
+        {
+            tempValue = tempValue + this.semaphores[i].value;
+        }
+        return parseInt(tempValue)
+    }
+
+    /**
+    * Function Name. decrementSemaphoreGroup()  
+    * Summary. 
+    * This Function is a helper to decrement all Semaphores in a Semaphore Group if an Action is started
+    *
+    * @author.     MH
+    *
+    */
+    decrementSemaphoreGroup()
+    {
+        // Decrement each Semaphore Value
+        for(let i = 0; i < this.semaphores.length; i ++)
+        {
+            this.semaphores[i].down(); 
+        }
+    }
 }
 
 

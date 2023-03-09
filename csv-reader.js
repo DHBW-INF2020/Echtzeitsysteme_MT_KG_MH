@@ -49,6 +49,7 @@ let Mutexes = [];
 function debugPrinter()
 {   
     // Reset all
+    /*
     actionArray = [];
     taskArray = [];
     semaphoreArray = [];
@@ -61,7 +62,7 @@ function debugPrinter()
     SemaphoreGroups = [];
     Mutexes = [];
     console.log(arrayFromCSV);
-
+    */
 
     convertToObjectBaseValue(arrayFromCSV);
     createSemaphoreObjects();
@@ -236,7 +237,7 @@ function createSemaphoreObjects()
         }
     }
     // Debug
-    //console.log("Semaphores", Semaphores)
+    console.log("Semaphores", Semaphores)
 }
 
 /**
@@ -264,7 +265,7 @@ function createSemaphoreGroupObjects()
             for(let j = 0; j < Semaphores.length; j++)
             {
                 // console.log(Semaphores[j].semaphoreGroup,parseInt(semaphoreGroupArray[i][0]))
-                if(Semaphores[j].semaphoreGroup == parseInt(semaphoreGroupArray[i][0]))
+                if(Semaphores[j].group == parseInt(semaphoreGroupArray[i][0]))
                 {
                     tempArray.push(Semaphores[j]);
                 }
@@ -339,6 +340,7 @@ function createActionObjects()
                 }
             }
 
+            console.log(semaphoreGroupIn)
 
             // find all Semaphores that come OUT of an Action
             //

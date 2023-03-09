@@ -24,13 +24,13 @@ class Task{
 //    Mutex Array:mutex_list
 //    )
 class Action{
-    constructor(id, action_name, action_steps, semaphores_in, semaphores_out, mutex_list)
+    constructor(id, action_name, action_steps, semaphore_group_in, semaphores_out, mutex_list)
     {
         // necessary input for class generation
         this.actionID = id;
         this.actionName = action_name;
         this.actionSteps = action_steps;
-        this.actionSemaphoresIn = semaphores_in;
+        this.actionSemaphoreGroupIn = semaphore_group_in;
         this.actionSemaphoresOut = semaphores_out;
         this.actionMutexList = mutex_list;
 
@@ -130,14 +130,24 @@ class Action{
 }
 
 //=====================================================================================================================================
+class SemaphoreGroup
+{
+    constructor(id, semaphores)
+    {
+        this.id = id;
+        this.semaphores = semaphores;
+    }
+}
+
 
 class Semaphore
 {
-    constructor(id, semaphore_value)
+    constructor(id, semaphore_value, semaphore_group)
     {
         // handle Input
         this.semaphoreID = id;
         this.semaphoreValue = semaphore_value;
+        this.semaphoreGroup = semaphore_group;
     }
 
 

@@ -16,11 +16,13 @@ let tableValueLocation = [
     [3,"taskBeginColumn",5],
     [4,"taskEndColumn",6],
     [5,"semaphoreBeginColumn",7],
-    [6,"semaphoreEndColumn",10],
-    [7,"mutexBeginColumn",11],
-    [8,"mutexEndColumn",11],
-    [9,"mutexActionBeginColumn",12],
-    [10,"mutexActionEndColumn",13]
+    [6,"semaphoreEndColumn",11],
+    [7,"mutexBeginColumn",12],
+    [8,"mutexEndColumn",12],
+    [9,"mutexActionBeginColumn",13],
+    [10,"mutexActionEndColumn",14],
+    [11,"semaphoreGroupBeginColumn",15],
+    [12,"semaphoreGroupEndColumn",15]
 ];
 
 let fileContent = "";
@@ -31,10 +33,12 @@ let taskArray = [];
 let semaphoreArray = [];
 let mutexArray = [];
 let mutexActionArray = [];
+let semaphoreGroupArray = [];
 
 let Actions = [];
 let Tasks = [];
 let Semaphores =[];
+let SemaphoreGroups = [];
 let Mutexes = [];
 
 
@@ -46,9 +50,10 @@ function debugPrinter()
     console.log(arrayFromCSV);
     convertToObjectBaseValue(arrayFromCSV);
 
-    createSemaphoreObjects()
-    createMutexObjects()
-    createActionObjects()
+    createSemaphoreObjects();
+    createSemaphoreGroupObjects();
+    createMutexObjects();
+    createActionObjects();
 }
 
 function changeCSVDefaultValues()
@@ -84,6 +89,7 @@ reader.onload = () => {
     fileContent = fileContent + reader.result;
     document.getElementById('out').innerHTML = reader.result
     console.log(fileContent);
+    // Write File Content to 2D Array
     arrayFromCSV = csvToArray(fileContent);
 
     // allow user to change the default column settings
@@ -160,7 +166,14 @@ function convertToObjectBaseValue(convertedCSVArray){
         }
         mutexActionArray.push(tempArray)
     
-
+        //=================== creating the Semaphore Group Array =========================
+        // clearing the temp Array
+        tempArray = [];
+        for(let j = tableValueLocation[10][2] - 1; j <= tableValueLocation[10][2] - 1; j++)
+        {
+            tempArray.push(convertedCSVArray[i][j]);
+        }
+        semaphoreGroupArray.push(tempArray)
         
 
     }
@@ -170,6 +183,7 @@ function convertToObjectBaseValue(convertedCSVArray){
     console.log("Semaphore Array: ", semaphoreArray );
     console.log("Mutex Array: ", mutexArray);
     console.log("Mutex-Action Array: ", mutexActionArray);
+    console.log("Semaphore-Group-Array: ", semaphoreGroupArray);
 }
 
 //================================================================================================
@@ -193,11 +207,52 @@ function createSemaphoreObjects()
         if(!(semaphoreArray[i][0]===""))
         {
         // get the semaphore ID and initial Value from the Semaphore Array
-        Semaphores.push(new Semaphore(parseInt(semaphoreArray[i][0]),semaphoreArray[i][3]))
+        Semaphores.push(new Semaphore(parseInt(semaphoreArray[i][0]),
+                                      parseInt(semaphoreArray[i][4]),
+                                      parseInt(semaphoreArray[i][3])))
         }
     }
 
     console.log("Semaphores", Semaphores)
+}
+
+/**
+* Function Name.        createSemaphoreGroupObjects() 
+* Summary.              
+* This Function creates all the Semaphores according to the List that is defined by the CSV
+* therefore it uses the converted CSV Data in the Array "semaphoreArray[]" to get all the necessary data
+*
+* The new objects are then saved inside the Semaphores[] Array
+* 
+* @author.     MH
+*
+*/
+function createSemaphoreGroupObjects()
+{
+    for(let i = 0; i < semaphoreGroupArray.length; i++)
+    {
+        if(!(semaphoreGroupArray[i][0]==="" || semaphoreGroupArray[i][0]==="\r"))
+        {
+            if (semaphoreGroupArray[i][0].search("\r") != -1)
+            {
+                semaphoreGroupArray[i][0] = semaphoreGroupArray[i][0].match(/\d+/)[0];
+            }
+            let tempArray = [];
+            for(let j = 0; j < Semaphores.length; j++)
+            {
+                // console.log(Semaphores[j].semaphoreGroup,parseInt(semaphoreGroupArray[i][0]))
+                if(Semaphores[j].semaphoreGroup == parseInt(semaphoreGroupArray[i][0]))
+                {
+                    tempArray.push(Semaphores[j]);
+                    
+                }
+            }
+            // console.log("temp array: ", tempArray)
+            SemaphoreGroups.push(new SemaphoreGroup(parseInt(semaphoreGroupArray[i][0]),tempArray))
+        }
+    }
+
+    console.log("SemaphoreGroups: ", SemaphoreGroups)
 }
 
 
@@ -242,11 +297,11 @@ function createActionObjects()
         // check if empty
         if(!(actionArray[i][0]===""))
         {
-            // find all Semaphores that come INTO an Action
+            // find all SemaphoreGroups that come INTO an Action
             //
-            // and add them to the semaphoresIn Array which will be used
+            // and add them to the semaphoreGroupIn Array which will be used
             // to create the "Action" Objects
-            let semaphoresIn = [];
+            let semaphoreGroupIn = [];
             for(let j = 0; j < semaphoreArray.length; j++)
             {
                 if(!(semaphoreArray[j][0]===""))
@@ -254,16 +309,17 @@ function createActionObjects()
                     // semaphoreArray[j][2] => Endpoint of semaphore
                     if(semaphoreArray[j][2] == actionArray[i][0])
                     {
-                        semaphoresIn.push(Semaphores[j])
+
+                        semaphoreGroupIn.push(SemaphoreGroups[semaphoreArray[j][3] - 1]);
                     }
                 }
             }
 
-            // find all Semaphores that come OUT of an Action
+            // find all SemaphoreGroups that come OUT of an Action
             //
-            // and add them to the semaphoresOut Array which will be used
+            // and add them to the semaphoreOut Array which will be used
             // to create the "Action" Objects
-            let semaphoresOut = [];
+            let semaphoreOut = [];
             for(let j = 0; j < semaphoreArray.length; j++)
             {
                 if(!(semaphoreArray[j][0]===""))
@@ -271,7 +327,7 @@ function createActionObjects()
                     // semaphoreArray[j][2] => Endpoint of semaphore
                     if(semaphoreArray[j][1] == actionArray[i][0])
                     {
-                        semaphoresOut.push(Semaphores[j])
+                        semaphoreOut.push(SemaphoreGroups[j])
                     }
                 }
             }
@@ -318,7 +374,7 @@ function createActionObjects()
             //    Semaphore Array:semaphores_out, 
             //    Mutex Array:mutex_list
             //    )
-            Actions.push(new Action(parseInt(actionArray[i][0]),actionArray[i][1], parseInt(actionArray[i][3]),semaphoresIn, semaphoresOut, mutexList))
+            Actions.push(new Action(parseInt(actionArray[i][0]),actionArray[i][1], parseInt(actionArray[i][3]), semaphoreGroupIn, semaphoreOut, mutexList))
         }
     }
     console.log("Actions", Actions)

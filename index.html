@@ -28,6 +28,8 @@
         <p>Select local CSV File:</p>
         <input type="file" class="file-input-csv" id="csv-file-input" name="csv-file-input" accept=".csv">
         <button id="convert-csv">Convert CSV</button>
+        <button id="debug-printer">Debug</button>
+        
         <pre id="out"><p>File contents will appear here</p></pre>
 
         <!--goJS-->
@@ -35,7 +37,55 @@
             style="width:1600px; height:600px; background-color: #DAE4E4;">
         </div>
         
+        <div id="csv-column-settings" style="display: none">
+            
+            <input type="number" min="0" class="csv-column-setting-input" value="1" id="action-begin" name="action-begin-column">
+            <label for="action-begin">Action Begin Column</label>
+            <br>
+            <input type="number" min="0" class="csv-column-setting-input" value="4" id="action-end" name="action-end-column">
+            <label for="action-end">Action End Column</label>
+            <br>
+            <br>
+            
+            <input type="number" min="0" class="csv-column-setting-input" value="5" id="task-begin" name="Task-begin-column">
+            <label for="task-begin">Task-begin-column</label>
+            <br>
+            
+            <input type="number" min="0" class="csv-column-setting-input" value="6" id="task-end" name="Task-end-column">
+            <label for="task-end">Task-end-column</label>
+            <br>
+            <br>
+            
+            <input type="number" min="0" class="csv-column-setting-input" value="7" id="semaphore-begin" name="Semaphore-begin-column">
+            <label for="semaphore-begin">Semaphore-begin-column</label>
+            <br>
+            <input type="number" min="0" class="csv-column-setting-input" value="10" id="semaphore-end" name="Semaphore-end-column">
+            <label for="semaphore-end">Semaphore-end-column</label>
+
+            <br>
+            <br>
+
+            <input type="number" min="0" class="csv-column-setting-input" value="11" id="mutex-begin" name="Mutex-begin-column">
+            <label for="mutex-begin">Mutex-begin-column</label>
+            <br>
+            <input type="number" min="0" class="csv-column-setting-input" value="11" id="mutex-end" name="Mutex-end-column">
+            <label for="mutex-end">Mutex-end-column</label>
+
+            <br>
+            <br>
+
+            <input type="number" min="0" class="csv-column-setting-input" value="12" id="mutex-action-begin" name="Mutex-Action-begin-column">
+            <label for="mutex-action-begin">Mutex-Action-begin-column</label>
+            <br>
+            <input type="number" min="0" class="csv-column-setting-input" value="13" id="mutex-end-begin" name="Mutex-Action-end-column">
+            <label for="mutex-end-begin">Mutex-Action-end-column</label>
+            <br>
+
+            <button id="change-csv-settings">Change CSV Default Settings</button>
+        </div>
+
         <!-- internal scripts -->
+        <script src="diagramm-classes.js" async defer></script>
         <script src="csv-reader.js" async defer></script>
         <script src="gojs-viewer.js"></script>
     </body>

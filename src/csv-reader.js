@@ -119,15 +119,6 @@ reader.onload = () => {
     console.log(fileContent);
     // Write File Content to 2D Array
     arrayFromCSV = csvToArray(fileContent);
-
-    // allow user to change the default column settings
-    csvColumnSettings.style.display = "initial";
-    let csvNumberInputs = document.querySelectorAll('.csv-column-setting-input')
-    for (let i = 0; i <csvNumberInputs.length; i++)
-    {
-        csvNumberInputs[i].setAttribute("max",arrayFromCSV[0].length)
-    }
-
 }
 
 // start reading the file. When it is done, calls the onload event defined above.
@@ -137,7 +128,6 @@ reader.readAsBinaryString(fileInput.files[0])
 
 convertButton.addEventListener('click',readFile)
 debugButton.addEventListener('click', debugPrinter)
-changeCSVSettings.addEventListener('click', changeCSVDefaultValues)
 
 
 

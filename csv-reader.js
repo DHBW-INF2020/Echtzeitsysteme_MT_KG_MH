@@ -96,6 +96,13 @@ function csvToArray (csv) {
     });
 };
 
+
+// remove duplicates from Array
+//SRC: https://www.naukri.com/learning/articles/remove-duplicates-javascript-array/
+function removeDuplicates(arr) 
+{
+    return arr.filter((item, index) => arr.indexOf(item) === index)
+}
 //================================================================================================
 
 const readFile = () => {
@@ -339,7 +346,7 @@ function createActionObjects()
                     }
                 }
             }
-
+            semaphoreGroupIn = removeDuplicates(semaphoreGroupIn)
             console.log(semaphoreGroupIn)
 
             // find all Semaphores that come OUT of an Action

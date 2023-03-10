@@ -1,6 +1,12 @@
 
 const simulationButton = document.getElementById('simulator');
 simulationButton.addEventListener('click', testSimulation);
+diagram = null;
+
+function initProgram(){
+    console.log("initProgram");
+    diagram = createDiagram();
+}
 
 function testSimulation()
 {
@@ -8,4 +14,5 @@ function testSimulation()
     {
         Actions[i].takeStep();
     }
+    showDiagram(diagram);
 }

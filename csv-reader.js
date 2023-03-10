@@ -69,6 +69,7 @@ function debugPrinter()
     createSemaphoreGroupObjects();
     createMutexObjects();
     createActionObjects();
+    createTaskObjects();
 
     for(let i = 0; i < Actions.length; i++)
     {
@@ -411,7 +412,13 @@ function createActionObjects()
             //    Semaphore Array:semaphores_out, 
             //    Mutex Array:mutex_list
             //    )
-            Actions.push(new Action(parseInt(actionArray[i][0]),actionArray[i][1], parseInt(actionArray[i][3]), semaphoreGroupIn, semaphoreOut, mutexList))
+            Actions.push(new Action(parseInt(actionArray[i][0]),
+                                                actionArray[i][1], 
+                                                parseInt(actionArray[i][3]), 
+                                                semaphoreGroupIn, 
+                                                semaphoreOut, 
+                                                mutexList,
+                                                parseInt(actionArray[i][2])))
         }
     }
     // DEBUG
@@ -422,7 +429,18 @@ function createTaskObjects()
 {
     for (let i = 0; i < taskArray.length; i++)
     {
-
-        Tasks.push()
+        if(!(taskArray[i][0]===""))
+        {
+            let tempActionArray = [];
+            for(let j = 0; j < Actions.length; j++)
+            {
+                if(Actions[j].taskAssignment == parseInt(taskArray[i][0]))
+                {
+                    tempActionArray.push(Actions[j]);
+                }
+            }
+            Tasks.push(new Task(parseInt(taskArray[i][0]),taskArray[i][1],tempActionArray))
+        }
     }
+    console.log("Tasks: ", Tasks);
 }

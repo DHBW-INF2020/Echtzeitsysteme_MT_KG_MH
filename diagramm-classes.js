@@ -41,31 +41,73 @@ class Action{
 
     /**
     * Function Name. takeStep()  
-    * Summary. This Function is responsible for taking the Action through a simulation step
+    * Summary. 
+    * This Function is responsible for taking the Action through a simulation step
+    * if the action is running check if the action is finished
+    * if the action is not running try to start it
     *
-    * Description. (use period)
     *
     * @author.     MH
     *
     */
     takeStep()
     {
-
+        if(this.running)
+        {
+            if(this.currentSteps == this.steps)
+            {
+                this.stopAction();
+            }
+            else
+            {
+                this.currentSteps = this.currentSteps + 1; 
+            }
+        }
+        else
+        {
+            this.startAction();
+        }
     }
 
 
     /**
     * Function Name. startAction()  
-    * Summary. This Function is responsible for taking the Action through a simulation step
+    * Summary. 
+    * This Function readies an Action and connected Semaphores and Mutexes for active simulation
     *
-    * Description. (use period)
     *
     * @author.     MH
-    *
+    * @return.     bool -> true if action was able to start
     */
     startAction()
     {
+        let startPossible = false;
+        for(let j = 0; j < this.semaphoreGroupIn.length; j++)
+        {
+            let tempVal = 0;
+            if(this.semaphoreGroupIn[j].combinedSemaphoreValue()>0)
+            {
+                tempVal = tempVal + 1;
+            }
+            if(tempVal == this.semaphoreGroupIn.length)
+            {
+                startPossible = true;
+            }
+        }
 
+        if(startPossible && this.takeResources())
+        {
+            this.currentSteps = 0;
+            this.running = true;
+
+            // consume Semaphore Values
+            for(let i = 0; i < this.semaphoreGroupIn.length; i++)
+            {
+                this.semaphoreGroupIn[i].decrementSemaphoreGroup();
+            }
+            console.log("Action ", this.id, " started")
+        }
+        return startPossible;
     }
 
 
@@ -80,52 +122,91 @@ class Action{
     */
     stopAction()
     {
-
+        // increment outgoing Semaphores
+        for(let i = 0; i < this.semaphoresOut.length; i++)
+        {
+            this.semaphoresOut[i].up()
+        }
+        // release Mutexes
+        this.releaseResources();
+        this.currentSteps = 0;
+        this.running = false;
+        console.log("Action ", this.id, " stopped")
+        return true;
     }
 
 
     /**
     * Function Name. checkResources()  
-    * Summary. This Function is responsible for taking the Action through a simulation step
+    * Summary. 
+    * This Function checks if all connected Mutexes are available 
     *
-    * Description. (use period)
     *
     * @author.     MH
-    *
+    * @return.      bool -> true if all Mutexes are available
     */
     checkResources()
     {
-
+        let resAvailable = false;
+        for(let i = 0; i < this.mutexList.length; i++)
+        {
+            if(this.mutexList[i].available)
+            {
+                resAvailable = true;
+            }
+            else
+            {
+                resAvailable = false;
+            }
+        }
+        console.log("Mutex available: ", resAvailable);
+        return resAvailable;
     }
 
 
     /**
     * Function Name. takeResources()  
-    * Summary. This Function is responsible for taking the Action through a simulation step
+    * Summary.
+    * This takes all connected Mutexes if possible
     *
-    * Description. (use period)
     *
     * @author.     MH
-    *
+    * @return.     bool -> true if action was able to take all needed Resources
     */
     takeResources()
     {
+        let successful = false;
+        if(this.checkResources())
+        {
+            for(let i = 0; i < this.mutexList; i++)
+            {
+                this.mutexList[i].down();
+                console.log("Mutex ",this.mutexList[i].id, "taken by", this.id);
+            }
 
+            successful = true;
+            
+        }
+        return successful;
     }
 
 
     /**
     * Function Name. releaseResources()  
-    * Summary. This Function is responsible for taking the Action through a simulation step
-    *
-    * Description. (use period)
+    * Summary.
+    * This function will release all Mutexes of an Action
+    * 
+    * Call after Action has concluded
     *
     * @author.     MH
     *
     */
     releaseResources()
     {
-
+        for(let i = 0; i < this.mutexList; i++)
+        {
+            this.mutexList[i].up();
+        }
     }
 }
 
@@ -191,13 +272,20 @@ class Semaphore
 
     up()
     {
-        this.semaphoreValue = this.semaphoreValue + 1;
+        this.value = this.value + 1;
     }
 
 
     down()
     {
-        this.semaphoreValue = this.semaphoreValue - 1;
+        if(this.value > 0)
+        {
+            this.value = this.value - 1;
+        }
+        else
+        {
+            console.log("DEBUG: Semaphore already 0");
+        }
     }
 }
 

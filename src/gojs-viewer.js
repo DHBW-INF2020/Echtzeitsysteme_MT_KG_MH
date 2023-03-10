@@ -7,6 +7,15 @@ const UNAVAILABLE_MUTEX_COLOR = "lightgray"
 
 const goMake = go.GraphObject.make;
 
+// This class is used to override the random generator of the gojs layouter
+class StaticNumberGenerator{
+    random(){
+        return 1;
+    }
+}
+
+staticNumberGenerator = new StaticNumberGenerator();
+
 function createDigramFromScratch(){
     diagram =
         goMake(go.Diagram,
@@ -14,9 +23,10 @@ function createDigramFromScratch(){
             {
                 //layout: make(go.TreeLayout, { setsPortSpot: false, setsChildPortSpot: false, isRealtime: false })
                 initialAutoScale: go.Diagram.Uniform,  // zoom to make everything fit in the viewport
-                layout: goMake(go.ForceDirectedLayout,  // automatically spread nodes apart
-                    { maxIterations: 200, defaultSpringLength: 30, defaultElectricalCharge: 100 , randomNumberGenerator: null}
-                )
+                // layout: goMake(go.ForceDirectedLayout,  // automatically spread nodes apart
+                //     { maxIterations: 200, defaultSpringLength: 30, defaultElectricalCharge: 100 , randomNumberGenerator: null}
+                // )
+                layout: goMake(go.ForceDirectedLayout, {randomNumberGenerator: staticNumberGenerator})
             }
         );
     // Disable the intital fade animation which is shown when loading the diagram
@@ -172,22 +182,39 @@ function showDiagram(diagram){
     links = [];
     for(taskNum = 0; taskNum < Tasks.length; taskNum++)
     {
-        actions = Tasks[taskNum].actions;
+        currentTask = Tasks[taskNum];
+        actions = currentTask.actions;
         for(actionNum = 0; actionNum < actions.length; actionNum++)
         {
+            currentAction = actions[actionNum];
             nodes.push(
                 {
-                    key: actions[actionNum].id, 
-                    task: Tasks[taskNum].name,
-                    activity: actions[actionNum].name,
-                    steps: actions[actionNum].steps,
-                    isActive: actions[actionNum].running,
+                    key: currentAction.id, 
+                    task: currentTask.name,
+                    activity: currentAction.name,
+                    steps: currentAction.steps,
+                    isActive: currentAction.running,
                     category: "Task"
                 }
             )
+            
+            semaphoresOut = currentAction.semaphoresOut;
+            for(semaphoreOutNum = 0; semaphoreOutNum < semaphoresOut.length; semaphoreOutNum++)
+            {
+                currentOutSemaphore = semaphoresOut[semaphoreOutNum];
+                links.push(
+                    {
+                        from: currentAction.id, 
+                        to: currentOutSemaphore.endpoint,
+                        isActive: (currentOutSemaphore.value > 0),
+                        count: currentOutSemaphore.value,
+                        category: "SemaphoreLink"
+                    }
+                )
+            } 
         }
     }
-
+    console.log("links", links)
     diagram.model = new go.GraphLinksModel(nodes, links)
 }
 

@@ -1,6 +1,10 @@
 const StepButton = document.getElementById('step');
 
+
+let connections = []
+
 function Step(){
+    let actions = []
     Actions.forEach(element => 
         {
             console.log(element)
@@ -33,7 +37,15 @@ function Step(){
                     
                 }
             }
+        actions.push({key: element.id.toString(), activity: element.name.toString(), steps: element.currentSteps.toString(), category: "Task"})
         })
+    console.log(actions)
+    let mutexes = []
+    Mutexes.forEach(element => 
+        {
+            mutexes.push({ key: element.id.toString(), isAvailable: element.available.toString(), category:"Mutex" })
+        })  
+    console.log(mutexes)  
 }
 
 StepButton.addEventListener('click',Step)

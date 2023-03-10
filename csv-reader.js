@@ -386,7 +386,7 @@ function createActionObjects()
                         for(let l = 0; l < Mutexes.length; l++)
                         {
                             // if Mutex belongs to Action append it to its Mutex List
-                            if(Mutexes[l].mutexID == mutexActionArray[j][1])
+                            if(Mutexes[l].id == mutexActionArray[j][1])
                             {
                                 mutexList.push(Mutexes[l])
                             }
@@ -394,6 +394,7 @@ function createActionObjects()
                     }
                 }
             }
+
 
             // get the semaphore ID and initial Value from the Semaphore Array
             // Helper: 

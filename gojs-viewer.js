@@ -1,3 +1,5 @@
+const ACTIVE_TASK_COLOR = "lightgreen"
+const PASSIVE_TASK_COLOR = "white"
 const ACTIVE_SEMAPHORE_COLOR = "green"
 const PASSIVE_SEMAPHORE_COLOR = "black"
 const AVAILABLE_MUTEX_COLOR = "lightgreen"
@@ -5,7 +7,7 @@ const UNAVAILABLE_MUTEX_COLOR = "lightgray"
 
 const goMake = go.GraphObject.make;
 
-function createDiagram(){
+function createDigramFromScratch(){
     diagram =
         goMake(go.Diagram,
             "myDiagramDiv",
@@ -33,10 +35,12 @@ function createTaskTemplate(diagram){
                 "Auto",
                 goMake(go.Shape, 
                     "RoundedTopRectangle",
-                    { fill: "white" }),
+                    new go.Binding("fill", "isActive", x => x == true ? ACTIVE_TASK_COLOR : PASSIVE_TASK_COLOR) 
+                ),
                 goMake(go.TextBlock,
                     { margin: new go.Margin(2, 2, 0, 2), textAlign: "center" },
-                    new go.Binding("text", "task"))
+                    new go.Binding("text", "task")
+                )
             ),
 
             goMake(go.Panel, 
@@ -144,34 +148,57 @@ function createMutexLink(diagram){
 function createExample(diagram){
     // Create a dummy model
     diagram.model = new go.GraphLinksModel([
-        { key: 1, task: "Task 1", activity: "Aktivität 1", steps:"5", category:"Task" },
+        { key: 0, task: "Task 1", activity: "Aktivität 1", steps:"5", category:"Task" },
         { key: 2, task: "Task 1", activity: "Aktivität 2", steps:"3", category:"Task" },
         { key: 3, task: "Task 2", activity: "Aktivität 3", steps:"3", category:"Task" },
         { key: 4, isAvailable: true, category:"Mutex" },
         { key: 5, isAvailable: false, category:"Mutex" },
         { key: 6, category:"SemaphoreOrNode" }
     ], [
-        { from: 1, to: 2, isActive: true, category: "SemaphoreLink", count: "5" },
-        { from: 2, to: 1, isActive: false, category: "SemaphoreLink", count: "0" },
-        { from: 1, to: 6, isActive: false, category: "SemaphoreLink", count: "0" },
+        { from: 0, to: 2, isActive: true, category: "SemaphoreLink", count: "5" },
+        { from: 2, to: 0, isActive: false, category: "SemaphoreLink", count: "0" },
+        { from: 0, to: 6, isActive: false, category: "SemaphoreLink", count: "0" },
         { from: 3, to: 6, isActive: false, category: "SemaphoreLink", count: "0" },
         { from: 6, to: 2, isActive: false, category: "SemaphoreLink", count: "0" },
-        { from: 1, to: 4, category: "MutexLink" },
+        { from: 0, to: 4, category: "MutexLink" },
         { from: 2, to: 4, category: "MutexLink" },
-        { from: 1, to: 5, category: "MutexLink" },
+        { from: 0, to: 5, category: "MutexLink" },
         { from: 2, to: 5, category: "MutexLink" }
     ]);
 }
 
-function init(){
-    diagram = createDiagram();
+function showDiagram(diagram){
+    nodes = [];
+    links = [];
+    for(taskNum = 0; taskNum < Tasks.length; taskNum++)
+    {
+        actions = Tasks[taskNum].actions;
+        for(actionNum = 0; actionNum < actions.length; actionNum++)
+        {
+            nodes.push(
+                {
+                    key: actions[actionNum].id, 
+                    task: Tasks[taskNum].name,
+                    activity: actions[actionNum].name,
+                    steps: actions[actionNum].steps,
+                    isActive: actions[actionNum].running,
+                    category: "Task"
+                }
+            )
+        }
+    }
+
+    diagram.model = new go.GraphLinksModel(nodes, links)
+}
+
+function createDiagram(){
+    diagram = createDigramFromScratch();
     createTaskTemplate(diagram);
     createMutexTemplate(diagram);
     createSempahoreOrNodeTemplate(diagram);
     createSemaphoreLink(diagram);
     createMutexLink(diagram);
-    createExample(diagram);
+    return diagram
 }
 
-init();
 console.log("Loaded gojs-viewer.js")

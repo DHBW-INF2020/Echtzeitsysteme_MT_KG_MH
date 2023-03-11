@@ -24,9 +24,11 @@ function createDigramFromScratch(){
                 //layout: make(go.TreeLayout, { setsPortSpot: false, setsChildPortSpot: false, isRealtime: false })
                 initialAutoScale: go.Diagram.Uniform,  // zoom to make everything fit in the viewport
                 // layout: goMake(go.ForceDirectedLayout,  // automatically spread nodes apart
-                //     { maxIterations: 200, defaultSpringLength: 30, defaultElectricalCharge: 100 , randomNumberGenerator: null}
+                //     { maxIterations: 1000, defaultSpringLength: 300, defaultElectricalCharge: 10 , randomNumberGenerator: staticNumberGenerator}
                 // )
-                layout: goMake(go.ForceDirectedLayout, {randomNumberGenerator: staticNumberGenerator})
+                layout: goMake(go.LayeredDigraphLayout, 
+                    { alignOption: go.LayeredDigraphLayout.AlignAll, layerSpacing: 50, iterations: 4, setsPortSpots: false}
+                )
             }
         );
     // Disable the intital fade animation which is shown when loading the diagram
@@ -121,7 +123,7 @@ function createSemaphoreLink(diagram){
     diagram.linkTemplateMap.add("SemaphoreLink",
         goMake(go.Link,
             //{ routing: go.Link.AvoidsNodes, corner: 10 },
-            { curve: go.Link.Bezier },
+            //{ curve: go.Link.Bezier },
             goMake(go.Shape, 
                 new go.Binding("stroke", "isActive", x => x == true ? ACTIVE_SEMAPHORE_COLOR : PASSIVE_SEMAPHORE_COLOR)
             ),
@@ -177,43 +179,123 @@ function createExample(diagram){
     ]);
 }
 
-function showDiagram(diagram){
-    nodes = [];
-    links = [];
-    for(taskNum = 0; taskNum < Tasks.length; taskNum++)
-    {
+function addTaskNodes(nodes){
+    for(taskNum = 0; taskNum < Tasks.length; taskNum++){
         currentTask = Tasks[taskNum];
         actions = currentTask.actions;
-        for(actionNum = 0; actionNum < actions.length; actionNum++)
-        {
+
+        for(actionNum = 0; actionNum < actions.length; actionNum++){
             currentAction = actions[actionNum];
             nodes.push(
                 {
-                    key: currentAction.id, 
+                    key: "a"+currentAction.id, 
                     task: currentTask.name,
                     activity: currentAction.name,
                     steps: currentAction.steps,
                     isActive: currentAction.running,
                     category: "Task"
                 }
-            )
-            
-            semaphoresOut = currentAction.semaphoresOut;
-            for(semaphoreOutNum = 0; semaphoreOutNum < semaphoresOut.length; semaphoreOutNum++)
-            {
-                currentOutSemaphore = semaphoresOut[semaphoreOutNum];
-                links.push(
-                    {
-                        from: currentAction.id, 
-                        to: currentOutSemaphore.endpoint,
-                        isActive: (currentOutSemaphore.value > 0),
-                        count: currentOutSemaphore.value,
-                        category: "SemaphoreLink"
-                    }
-                )
-            } 
+            );
         }
     }
+}
+
+function addMutexNodes(nodes){
+    for(MutexNum = 0; MutexNum < Mutexes.length; MutexNum++){
+        currentMutex = Mutexes[MutexNum];
+        nodes.push(
+            {
+                key: "m"+currentMutex.id, 
+                isAvailable: currentMutex.available, 
+                category:"Mutex" 
+            }
+        )
+    }
+}
+
+function addSempahoreLinksAndNodes(nodes, links){
+    for(semaphoreGroupNum = 0; semaphoreGroupNum < SemaphoreGroups.length; semaphoreGroupNum++)
+    {
+        semaphores = SemaphoreGroups[semaphoreGroupNum].semaphores
+        if(semaphores.length == 1){
+            currentSemaphore = semaphores[0];
+            links.push(
+                {
+                    from: "a"+currentSemaphore.startingpoint, 
+                    to: "a"+currentSemaphore.endpoint,
+                    isActive: (currentSemaphore.value > 0),
+                    count: currentSemaphore.value,
+                    category: "SemaphoreLink"
+                }
+            );
+        }
+        else{
+            semaphoreOrNodeKey = "s"+semaphoreGroupNum;
+            nodes.push(
+                {
+                    key: semaphoreOrNodeKey,
+                    category: "SemaphoreOrNode"
+                }
+            );
+            
+            currentSemaphore = 0;
+            for(semaphoreNum = 0; semaphoreNum < semaphores.length; semaphoreNum++)
+            {
+                currentSemaphore = semaphores[semaphoreNum];
+                links.push(
+                    {
+                        from: "a"+currentSemaphore.startingpoint, 
+                        to: semaphoreOrNodeKey,
+                        isActive: (currentSemaphore.value > 0),
+                        count: currentSemaphore.value,
+                        category: "SemaphoreLink"
+                    }
+                );
+            } 
+
+            links.push(
+                {
+                    from: semaphoreOrNodeKey, 
+                    to: "a"+currentSemaphore.endpoint,
+                    isActive: (0 > 0), // It needs a variable
+                    count: 0, // It needs a variable
+                    category: "SemaphoreLink"
+                }
+            );
+        }
+    }
+}
+
+function getMutexLinks(links){
+    for(actionNum = 0; actionNum < Actions.length; actionNum++){
+        currentAction = Actions[actionNum];
+        currentMutexList = currentAction.mutexList;
+        
+        if(currentMutexList.length > 0){
+            for(mutexNum = 0; mutexNum < currentMutexList.length; mutexNum++){
+                currentMutex = currentMutexList[mutexNum];
+                links.push(
+                    {
+                        from: "a"+currentAction.id, 
+                        to: "m"+currentMutex.id,
+                        category: "MutexLink"
+                    }
+                );
+            }
+        }
+    }
+}
+
+function showDiagram(diagram){
+    nodes = [];
+    links = [];
+
+    addTaskNodes(nodes);
+    addMutexNodes(nodes);
+    addSempahoreLinksAndNodes(nodes, links);    
+    getMutexLinks(links);
+
+    console.log("nodes", nodes)
     console.log("links", links)
     diagram.model = new go.GraphLinksModel(nodes, links)
 }

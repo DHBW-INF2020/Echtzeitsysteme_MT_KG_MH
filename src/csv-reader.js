@@ -71,10 +71,6 @@ function debugPrinter()
     createActionObjects();
     createTaskObjects();
 
-    for(let i = 0; i < Actions.length; i++)
-    {
-        Actions[i].takeStep();
-    }
 }
 
 function changeCSVDefaultValues()

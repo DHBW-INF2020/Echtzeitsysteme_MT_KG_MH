@@ -83,19 +83,25 @@ class Action{
     startAction()
     {
         let startPossible = false;
+        
+
+        let tempVal = 0;
         for(let j = 0; j < this.semaphoreGroupIn.length; j++)
         {
-            let tempVal = 0;
-            if(this.semaphoreGroupIn[j].combinedSemaphoreValue()>0)
+            
+            this.semaphoreGroupIn[j].combinedSemaphoreValue()
+            if(this.semaphoreGroupIn[j].combinedGrpValue>0)
             {
                 tempVal = tempVal + 1;
             }
+            
+        }
+        console.log("test",tempVal,this.semaphoreGroupIn.length,"ID: ", this.id);
             if(tempVal == this.semaphoreGroupIn.length)
             {
                 startPossible = true;
             }
-        }
-
+        console.log("start possible:",startPossible, "checking Mutexes")
         if(startPossible && this.takeResources())
         {
             this.currentSteps = 0;
@@ -128,10 +134,15 @@ class Action{
         {
             this.semaphoresOut[i].up()
         }
+        for(let j =0; j < this.semaphoreGroupIn.length; j++)
+        {
+            this.semaphoreGroupIn[j].combinedSemaphoreValue();
+        }
         // release Mutexes
         this.releaseResources();
         this.currentSteps = 0;
         this.running = false;
+        
         console.log("Action ", this.id, " stopped")
         return true;
     }
@@ -149,8 +160,14 @@ class Action{
     checkResources()
     {
         let resAvailable = false;
+        console.log("test check Res", this.mutexList.length);
+        if(this.mutexList.length == 0)
+        {
+            resAvailable = true;
+        }
         for(let i = 0; i < this.mutexList.length; i++)
         {
+            console.log("individual Mutex List: ",this.mutexList[i]);
             if(this.mutexList[i].available)
             {
                 resAvailable = true;
@@ -177,8 +194,10 @@ class Action{
     takeResources()
     {
         let successful = false;
+        console.log("Check Resources result: ", this.checkResources());
         if(this.checkResources())
         {
+            console.log("Mutexes available ... pending");
             for(let i = 0; i < this.mutexList; i++)
             {
                 this.mutexList[i].down();
@@ -218,6 +237,7 @@ class SemaphoreGroup
     {
         this.id = id;
         this.semaphores = semaphores;
+        this.combinedGrpValue = 0;
     }
 
     /**
@@ -236,7 +256,7 @@ class SemaphoreGroup
         {
             tempValue = tempValue + this.semaphores[i].value;
         }
-        return parseInt(tempValue)
+        this.combinedGrpValue = parseInt(tempValue);
     }
 
     /**

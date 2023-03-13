@@ -191,7 +191,7 @@ function addTaskNodes(nodes){
                     key: "a"+currentAction.id, 
                     task: currentTask.name,
                     activity: currentAction.name,
-                    steps: currentAction.steps,
+                    steps: currentAction.currentSteps+"/"+currentAction.steps,
                     isActive: currentAction.running,
                     category: "Task"
                 }
@@ -295,8 +295,8 @@ function showDiagram(diagram){
     addSempahoreLinksAndNodes(nodes, links);    
     getMutexLinks(links);
 
-    console.log("nodes", nodes)
-    console.log("links", links)
+    //console.log("nodes", nodes)
+    //console.log("links", links)
     diagram.model = new go.GraphLinksModel(nodes, links)
 }
 

@@ -411,6 +411,17 @@ function createActionObjects()
     console.log("Actions", Actions)
 }
 
+
+/**
+* Function Name.        createTaskObjects() 
+* Summary.              
+* This Function wil create all Tasks with their according sub-actions
+* 
+* The "Action"- Objects have to be created first
+* 
+* @author.     MH
+*
+*/
 function createTaskObjects()
 {
     for (let i = 0; i < taskArray.length; i++)

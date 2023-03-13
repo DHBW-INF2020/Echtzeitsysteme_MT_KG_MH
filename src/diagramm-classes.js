@@ -23,6 +23,28 @@ class Task{
 //    Semaphore Array:semaphores_out, 
 //    Mutex Array:mutex_list
 //    )
+
+ /**
+    * Class Name. Action()  
+    * Summary. 
+    * This Class describes an Action 
+    * The Logic of the Model is implemented in the Actions Functions
+    * 
+    * @attributes.
+    * id (int) -> the ID of the Action
+    * name (string) -> Action Name
+    * steps (int) -> the total amount of steps that are needed for the action
+    * semaphoreGroupIn (Arr Obj) -> a Group of Semaphores that go into the Action 
+    * SemaphoresOut (Arr Obj) -> All Semaphores that go out of the Action (will be incremented when Action concludes)
+    * mutexList (Arr Obj) -> All Mutexes that are connected to this Task
+    * taskAssignment (int) -> indicates the Parent Task of an Action
+    * 
+    * currentSteps (int) -> indicates at which point the Action is in its execution
+    * running (bool) -> indicates if an Action is Running
+    *
+    * @author.     MH
+    *
+    */
 class Action{
     constructor(id, action_name, action_steps, semaphore_group_in, semaphores_out, mutex_list,task_assigned)
     {
@@ -165,16 +187,19 @@ class Action{
         {
             resAvailable = true;
         }
-        for(let i = 0; i < this.mutexList.length; i++)
+        else
         {
-            console.log("individual Mutex List: ",this.mutexList[i]);
-            if(this.mutexList[i].available)
+            for(let i = 0; i < this.mutexList.length; i++)
             {
-                resAvailable = true;
-            }
-            else
-            {
-                resAvailable = false;
+                console.log("individual Mutex List: ",this.mutexList[i].available);
+                if(this.mutexList[i].available)
+                {
+                    resAvailable = true;
+                }
+                else
+                {
+                    resAvailable = false;
+                }
             }
         }
         console.log("Mutex available: ", resAvailable);
@@ -194,14 +219,11 @@ class Action{
     takeResources()
     {
         let successful = false;
-        console.log("Check Resources result: ", this.checkResources());
         if(this.checkResources())
         {
-            console.log("Mutexes available ... pending");
-            for(let i = 0; i < this.mutexList; i++)
+            for(let i = 0; i < this.mutexList.length; i++)
             {
                 this.mutexList[i].down();
-                console.log("Mutex ",this.mutexList[i].id, "taken by", this.id);
             }
 
             successful = true;
@@ -223,7 +245,7 @@ class Action{
     */
     releaseResources()
     {
-        for(let i = 0; i < this.mutexList; i++)
+        for(let i = 0; i < this.mutexList.length; i++)
         {
             this.mutexList[i].up();
         }

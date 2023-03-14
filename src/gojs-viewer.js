@@ -271,6 +271,8 @@ function getMutexLinks(links){
         currentAction = Actions[actionNum];
         currentMutexList = currentAction.mutexList;
         
+        // console.log("currentAction: ", currentAction)
+
         if(currentMutexList.length > 0){
             for(mutexNum = 0; mutexNum < currentMutexList.length; mutexNum++){
                 currentMutex = currentMutexList[mutexNum];
@@ -278,7 +280,8 @@ function getMutexLinks(links){
                     {
                         from: "a"+currentAction.id, 
                         to: "m"+currentMutex.id,
-                        category: "MutexLink"
+                        category: "MutexLink",
+                        isActive: currentAction.running
                     }
                 );
             }
@@ -296,7 +299,7 @@ function showDiagram(diagram){
     getMutexLinks(links);
 
     //console.log("nodes", nodes)
-    //console.log("links", links)
+    // console.log("links", links)
     diagram.model = new go.GraphLinksModel(nodes, links)
 }
 

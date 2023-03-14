@@ -6,7 +6,13 @@ const convertButton = document.getElementById('convert-csv');
 const debugButton = document.getElementById('debug-printer');
 const changeCSVSettings = document.getElementById('change-csv-settings');
 
+
 const csvColumnSettings = document.getElementById('csv-column-settings');
+
+
+
+
+
 
 let tableRowLength = 0;
 
@@ -105,6 +111,8 @@ function removeDuplicates(arr)
 {
     return arr.filter((item, index) => arr.indexOf(item) === index)
 }
+
+
 //================================================================================================
 
 const readFile = () => {
@@ -122,8 +130,7 @@ reader.readAsBinaryString(fileInput.files[0])
 }
 
 
-convertButton.addEventListener('click',readFile)
-debugButton.addEventListener('click', debugPrinter)
+
 
 
 
@@ -441,3 +448,7 @@ function createTaskObjects()
     }
     console.log("Tasks: ", Tasks);
 }
+
+
+convertButton.addEventListener('click',readFile);
+debugButton.addEventListener('click', debugPrinter);

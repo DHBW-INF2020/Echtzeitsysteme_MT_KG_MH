@@ -19,16 +19,12 @@ let tableRowLength = 0;
 let tableValueLocation = [
     [1,"actionBeginColumn",1],
     [2,"actionEndColumn",4],
-    [3,"taskBeginColumn",5],
-    [4,"taskEndColumn",6],
-    [5,"semaphoreBeginColumn",7],
-    [6,"semaphoreEndColumn",11],
-    [7,"mutexBeginColumn",12],
-    [8,"mutexEndColumn",12],
-    [9,"mutexActionBeginColumn",13],
-    [10,"mutexActionEndColumn",14],
-    [11,"semaphoreGroupBeginColumn",15],
-    [12,"semaphoreGroupEndColumn",15]
+    [3,"taskBeginColumn",6],
+    [4,"taskEndColumn",7],
+    [5,"semaphoreBeginColumn",9],
+    [6,"semaphoreEndColumn",13],
+    [7,"mutexActionBeginColumn",15],
+    [8,"mutexActionEndColumn",16],
 ];
 
 let fileContent = "";
@@ -97,7 +93,7 @@ function changeCSVDefaultValues()
 
 // converts a csv string into a 2D Array
 function csvToArray (csv) {
-    rows = csv.split("\n");
+    rows = csv.split("\r\n");
 
     return rows.map(function (row) {
     	return row.split(";");
@@ -116,17 +112,17 @@ function removeDuplicates(arr)
 //================================================================================================
 
 const readFile = () => {
-const reader = new FileReader()
-reader.onload = () => {
-    fileContent = fileContent + reader.result;
-    document.getElementById('out').innerHTML = reader.result
-    console.log(fileContent);
-    // Write File Content to 2D Array
-    arrayFromCSV = csvToArray(fileContent);
-}
+    const reader = new FileReader()
+    reader.onload = () => {
+        fileContent = fileContent + reader.result;
+        document.getElementById('out').innerHTML = reader.result
+        console.log(fileContent);
+        // Write File Content to 2D Array
+        arrayFromCSV = csvToArray(fileContent);
+    }
 
-// start reading the file. When it is done, calls the onload event defined above.
-reader.readAsBinaryString(fileInput.files[0])
+    // start reading the file. When it is done, calls the onload event defined above.
+    reader.readAsBinaryString(fileInput.files[0])
 }
 
 
@@ -137,7 +133,7 @@ reader.readAsBinaryString(fileInput.files[0])
 //================================================================================================
 
 function convertToObjectBaseValue(convertedCSVArray){
-
+    console.log("convertedCSVArray",convertedCSVArray);
     // start with 1 as the first line are the column names
     for (let i = 1; i < convertedCSVArray.length; i++)
     {
@@ -170,34 +166,26 @@ function convertToObjectBaseValue(convertedCSVArray){
         semaphoreArray.push(tempArray)
 
         //=================== creating the Mutex Array =========================
+        mutexArray.push(convertedCSVArray[i][15]);
+
+        //=================== creating the Mutex-Action Array =========================
         // clearing the temp Array
         tempArray = [];
         for(let j = tableValueLocation[6][2] - 1; j <= tableValueLocation[7][2] - 1; j++)
         {
             tempArray.push(convertedCSVArray[i][j]);
         }
-        mutexArray.push(tempArray)
-
-        //=================== creating the Mutex-Action Array =========================
-        // clearing the temp Array
-        tempArray = [];
-        for(let j = tableValueLocation[8][2] - 1; j <= tableValueLocation[9][2] - 1; j++)
-        {
-            tempArray.push(convertedCSVArray[i][j]);
-        }
         mutexActionArray.push(tempArray)
     
         //=================== creating the Semaphore Group Array =========================
-        // clearing the temp Array
-        tempArray = [];
-        for(let j = tableValueLocation[10][2] - 1; j <= tableValueLocation[10][2] - 1; j++)
-        {
-            tempArray.push(convertedCSVArray[i][j]);
-        }
-        semaphoreGroupArray.push(tempArray)
+        semaphoreGroupArray.push(convertedCSVArray[i][11]);
+
         
 
     }
+    mutexArray = removeDuplicates(mutexArray);
+    semaphoreGroupArray = removeDuplicates(semaphoreGroupArray);
+
     // log the Arrays to the Console
     console.log("Action Array: ", actionArray);
     console.log("Task Array: ", taskArray);
@@ -261,17 +249,17 @@ function createSemaphoreGroupObjects()
 {
     for(let i = 0; i < semaphoreGroupArray.length; i++)
     {
-        if(!(semaphoreGroupArray[i][0]==="" || semaphoreGroupArray[i][0]==="\r"))
+        if(!(semaphoreGroupArray[i]==="" || semaphoreGroupArray[i]==="\r"))
         {
-            if (semaphoreGroupArray[i][0].search("\r") != -1)
+            if (semaphoreGroupArray[i].search("\r") != -1)
             {
-                semaphoreGroupArray[i][0] = semaphoreGroupArray[i][0].match(/\d+/)[0];
+                semaphoreGroupArray[i] = semaphoreGroupArray[i].match(/\d+/)[0];
             }
             let tempArray = [];
             for(let j = 0; j < Semaphores.length; j++)
             {
                 // console.log(Semaphores[j].semaphoreGroup,parseInt(semaphoreGroupArray[i][0]))
-                if(Semaphores[j].group == parseInt(semaphoreGroupArray[i][0]))
+                if(Semaphores[j].group == parseInt(semaphoreGroupArray[i]))
                 {
                     tempArray.push(Semaphores[j]);
                 }
@@ -303,10 +291,10 @@ function createMutexObjects()
 {
     for (let i = 0; i < mutexArray.length; i++)
     {
-        if(!(mutexArray[i][0]===""))
+        if(!(mutexArray[i]===""))
         {
-        // get the semaphore ID and initial Value from the Semaphore Array
-        Mutexes.push(new Mutex(parseInt(mutexArray[i][0])))
+            // get the semaphore ID and initial Value from the Semaphore Array
+            Mutexes.push(new Mutex(parseInt(mutexArray[i])))
         }
     }
     // DEBUG

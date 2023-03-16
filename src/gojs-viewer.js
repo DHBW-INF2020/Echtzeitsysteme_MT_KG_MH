@@ -188,7 +188,7 @@ function addTaskNodes(nodes){
             currentAction = actions[actionNum];
             nodes.push(
                 {
-                    key: "a"+currentAction.id, 
+                    key: "s"+currentAction.id, 
                     task: currentTask.name,
                     activity: currentAction.name,
                     steps: currentAction.currentSteps+"/"+currentAction.steps,
@@ -221,8 +221,8 @@ function addSempahoreLinksAndNodes(nodes, links){
             currentSemaphore = semaphores[0];
             links.push(
                 {
-                    from: "a"+currentSemaphore.startingpoint, 
-                    to: "a"+currentSemaphore.endpoint,
+                    from: "s"+currentSemaphore.startingpoint, 
+                    to: "s"+currentSemaphore.endpoint,
                     isActive: (currentSemaphore.value > 0),
                     count: currentSemaphore.value,
                     category: "SemaphoreLink"
@@ -230,7 +230,7 @@ function addSempahoreLinksAndNodes(nodes, links){
             );
         }
         else{
-            semaphoreOrNodeKey = "s"+semaphoreGroupNum;
+            semaphoreOrNodeKey = "g"+semaphoreGroupNum;
             nodes.push(
                 {
                     key: semaphoreOrNodeKey,
@@ -244,7 +244,7 @@ function addSempahoreLinksAndNodes(nodes, links){
                 currentSemaphore = semaphores[semaphoreNum];
                 links.push(
                     {
-                        from: "a"+currentSemaphore.startingpoint, 
+                        from: "s"+currentSemaphore.startingpoint, 
                         to: semaphoreOrNodeKey,
                         isActive: (currentSemaphore.value > 0),
                         count: currentSemaphore.value,
@@ -256,9 +256,9 @@ function addSempahoreLinksAndNodes(nodes, links){
             links.push(
                 {
                     from: semaphoreOrNodeKey, 
-                    to: "a"+currentSemaphore.endpoint,
-                    isActive: (0 > 0), // It needs a variable
-                    count: 0, // It needs a variable
+                    to: "s"+currentSemaphore.endpoint,
+                    isActive: (SemaphoreGroups[semaphoreGroupNum].combinedGrpValue > 0), // It needs a variable
+                    count: SemaphoreGroups[semaphoreGroupNum].combinedGrpValue, // It needs a variable
                     category: "SemaphoreLink"
                 }
             );
@@ -278,7 +278,7 @@ function getMutexLinks(links){
                 currentMutex = currentMutexList[mutexNum];
                 links.push(
                     {
-                        from: "a"+currentAction.id, 
+                        from: "s"+currentAction.id, 
                         to: "m"+currentMutex.id,
                         category: "MutexLink",
                         isActive: currentAction.running
@@ -299,7 +299,7 @@ function showDiagram(diagram){
     getMutexLinks(links);
 
     //console.log("nodes", nodes)
-    // console.log("links", links)
+    console.log("links", links)
     diagram.model = new go.GraphLinksModel(nodes, links)
 }
 

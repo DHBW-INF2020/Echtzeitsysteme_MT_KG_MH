@@ -134,8 +134,8 @@ function removeDuplicates(arr)
 
 //================================================================================================
 
-function convertToObjectBaseValue(convertedCSVArray){
-    console.log("convertedCSVArray",convertedCSVArray);
+function convertToObjectBaseValue(convertedCSVArray)
+{
 
     // Clear all arrays needed for this function
     actionArray = [];
@@ -194,13 +194,6 @@ function convertToObjectBaseValue(convertedCSVArray){
     mutexArray = removeDuplicates(mutexArray);
     semaphoreGroupArray = removeDuplicates(semaphoreGroupArray);
 
-    // log the Arrays to the Console
-    console.log("Action Array: ", actionArray);
-    console.log("Task Array: ", taskArray);
-    console.log("Semaphore Array: ", semaphoreArray );
-    console.log("Mutex Array: ", mutexArray);
-    console.log("Mutex-Action Array: ", mutexActionArray);
-    console.log("Semaphore-Group-Array: ", semaphoreGroupArray);
 }
 
 //================================================================================================

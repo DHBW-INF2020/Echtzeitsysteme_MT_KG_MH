@@ -44,8 +44,11 @@ const readFile = () => {
         arrayFromCSV = csvToArray(fileContent);
     }
 
+    
+
     // start reading the file. When it is done, calls the onload event defined above.
-    reader.readAsBinaryString(fileInput.files[0])
+    reader.readAsBinaryString(fileInput.files[0]);
+    addNewMessage("Notification","file read","g");
 }
 
 // converts a csv string into a 2D Array

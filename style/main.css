@@ -1,12 +1,69 @@
+:root{
+    --diag-content-width: 40vw;
+    --error-message-width: 15vw;
+    --header-height: 26px;
+}
+
 body{
-    background-color: rgb(41, 41, 41);
-    color: white;
+
     font-family: sans-serif;
 }
 
-.file-input-csv{
-    background-color: rgb(15, 17, 43);
-    padding: 10px;
-    border-radius: 3px;
+.content-container{
+    width: 90%; /* You can use other units like px, em, or % */
+    height:max-content;
+    margin-left: auto;
+    margin-right: auto;
+    display: grid;
+    grid-template-columns: 5fr 1fr;
 }
 
+.simulation-container{ 
+    grid-column-start: 1;
+    grid-column-end: 1;
+    grid-row-start: 1;
+    grid-row-end: 1
+}
+
+.file-input-csv{
+    
+}
+
+.go-js-canvas{
+     
+    height: 70vh; 
+    background-color: #ffffff;
+    border: 1px solid black;
+    border-radius: 10px;
+    margin-top: 20px;
+}
+
+.simulation-container-header{
+    background-color: #CBDCF0;
+    padding: 1vw;
+    border-radius: 0.5vw;
+    height: var(--header-height);
+}
+
+.message-container{
+    grid-column-start: 2;
+    grid-row-start: 1;
+    grid-row-end: 1;
+}
+
+.message-header{
+    background-color: #CBDCF0;
+    padding: 1vw;
+    border-radius: 0.5vw;
+    height: var(--header-height);
+    margin-left: 10px;
+    text-align: center;
+}
+
+.message-collector{
+    border: 1px solid black;
+    border-radius: 10px;
+    margin-top: 20px;
+    margin-left: 10px;
+    padding: 10px;
+}

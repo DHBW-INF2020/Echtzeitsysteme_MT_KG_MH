@@ -39,8 +39,7 @@ const readFile = () => {
     const reader = new FileReader()
     reader.onload = () => {
         fileContent = reader.result;
-        document.getElementById('out').innerHTML = reader.result
-        console.log(fileContent);
+
         // Write File Content to 2D Array
         arrayFromCSV = csvToArray(fileContent);
     }

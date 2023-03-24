@@ -22,30 +22,41 @@
         
     </head>
     <body onload="initProgram()">
-        <div>
-            <h1>Hello There</h1>
+        
+        <div class="content-container">
+            <div id="simulation-container">
+                <div class="simulation-container-header">
+                    <input type="file" class="file-input-csv" id="csv-file-input" name="csv-file-input" accept=".csv">
+                    <button id="convert-csv">Convert CSV</button>
+                    <button id="debug-printer">Debug</button>
+                    <button id="simulator">Step</button>
+                    <button id="timer">Start Simulation</button>
+                </div>
+
+                <!--goJS Canvas-->
+                <div id="myDiagramDiv" class="go-js-canvas"></div>
+            </div>
+            <div id="message-container">
+                <div class="message-header">
+                    Messages
+                </div>
+                <div id="message-collector" class="message-collector">
+                    
+                </div>
+            </div>
         </div>
-        <p>Select local CSV File:</p>
-        <input type="file" class="file-input-csv" id="csv-file-input" name="csv-file-input" accept=".csv">
-        <button id="convert-csv">Convert CSV</button>
-        <button id="debug-printer">Debug</button>
-        <button id="simulator">Step</button>
-        <button id="timer">Start Simulation</button>
+
+        
         
 
-        <!--goJS-->
-        <div id="myDiagramDiv"
-            style="width:1600px; height:600px; background-color: #DAE4E4;">
-        </div>
-        <!-- File Content -->
-        <pre id="out"><p>File contents will appear here</p></pre>
-
+        
 
         <!-- internal scripts -->
         <script src="src/diagramm-classes.js" async defer></script>
         <script src="src/csv-reader.js" async defer></script>
         <script src="src/gojs-viewer.js" async defer></script>
         <script src="src/simulation.js"async defer></script>
+
     </body>
     
 </html>

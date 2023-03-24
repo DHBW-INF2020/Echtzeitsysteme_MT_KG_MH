@@ -231,8 +231,6 @@ function createSemaphoreObjects()
                                         parseInt(semaphoreArray[i][2])))
         }
     }
-    // Debug
-    console.log("Semaphores", Semaphores)
 }
 
 /**
@@ -266,13 +264,9 @@ function createSemaphoreGroupObjects()
                 }
             }
 
-            // DEBUG
-            //console.log("temp array: ", tempArray)
             SemaphoreGroups.push(new SemaphoreGroup(parseInt(semaphoreGroupArray[i][0]),tempArray))
         }
     }
-    // DEBUG
-    console.log("SemaphoreGroups: ", SemaphoreGroups)
 }
 
 
@@ -297,8 +291,6 @@ function createMutexObjects()
             Mutexes.push(new Mutex(parseInt(mutexArray[i])))
         }
     }
-    // DEBUG
-    console.log("Mutexes", Mutexes)
 }
 
 
@@ -334,7 +326,6 @@ function createActionObjects()
                 }
             }
             semaphoreGroupIn = removeDuplicates(semaphoreGroupIn)
-            console.log(semaphoreGroupIn)
 
             // find all Semaphores that come OUT of an Action
             //
@@ -402,8 +393,6 @@ function createActionObjects()
                                                 parseInt(actionArray[i][2])))
         }
     }
-    // DEBUG
-    console.log("Actions", Actions)
 }
 
 
@@ -434,7 +423,6 @@ function createTaskObjects()
             Tasks.push(new Task(parseInt(taskArray[i][0]),taskArray[i][1],tempActionArray))
         }
     }
-    console.log("Tasks: ", Tasks);
 }
 
 

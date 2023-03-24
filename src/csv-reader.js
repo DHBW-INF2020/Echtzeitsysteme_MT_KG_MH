@@ -3,6 +3,8 @@ const convertButton = document.getElementById('convert-csv');
 const debugButton = document.getElementById('debug-printer');
 const changeCSVSettings = document.getElementById('change-csv-settings');
 const csvColumnSettings = document.getElementById('csv-column-settings');
+const fileGuard = document.getElementById('csv-file-input').addEventListener('change', validateFileType);
+
 
 let tableRowLength = 0;
 let tableValueLocation = [
@@ -61,6 +63,28 @@ function csvToArray (csv) {
     	return row.split(";");
     });
 };
+
+/**
+* Function Name.        validateFileType() 
+* Summary. 
+* This function checks whether the uploaded File is a CSV
+* Needed because the constraint on the Input field is not foolproof
+* -> if not throws an error             
+* 
+* @author.     MH (help by Chat GPT)
+*
+*/
+function validateFileType() {
+    const fileInput = document.getElementById('csv-file-input');
+    const file = fileInput.files[0];
+    const allowedExtensions = /(\.csv)$/i;
+
+    if (!allowedExtensions.exec(file.name)) {
+        alert('Bitte eine CSV Datei hochladen!!!');
+        fileInput.value = '';
+        return false;
+    }
+}
 
 //================================================================================================
 

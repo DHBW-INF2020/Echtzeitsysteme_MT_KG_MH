@@ -43,13 +43,17 @@ const readFile = () => {
         // Write File Content to 2D Array
         arrayFromCSV = csvToArray(fileContent);
     }
-
-    
-
     // start reading the file. When it is done, calls the onload event defined above.
     reader.readAsBinaryString(fileInput.files[0]);
     addNewMessage("Notification","file read","g");
+
+    reader.onloadend = () => {
+        initFromCSV();
+    }
 }
+
+convertButton.addEventListener('click',readFile);
+
 
 // converts a csv string into a 2D Array
 function csvToArray (csv) {
@@ -91,14 +95,18 @@ function validateFileType() {
 //================================================================================================
 
 // this function provides easy printing of values to the console by pressing a button
-function debugPrinter()
+function initFromCSV()
 {   
+    
     // Reset class objects containers
     Actions = [];
     Tasks = [];
     Semaphores =[];
     SemaphoreGroups = [];
     Mutexes = [];
+
+    console.log("test")
+    console.log(arrayFromCSV)
 
     convertToObjectBaseValue(arrayFromCSV);
     createSemaphoreObjects();
@@ -419,5 +427,7 @@ function createTaskObjects()
 }
 
 
-convertButton.addEventListener('click',readFile);
-debugButton.addEventListener('click', debugPrinter);
+
+
+
+

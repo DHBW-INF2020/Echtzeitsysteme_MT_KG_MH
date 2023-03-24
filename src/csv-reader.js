@@ -49,7 +49,13 @@ const readFile = () => {
 
 // converts a csv string into a 2D Array
 function csvToArray (csv) {
-    rows = csv.split("\r\n");
+    if (navigator.userAgent.indexOf('Win') != -1) {
+        console.log('Windows');
+        rows = csv.split("\r\n");
+    } else if (navigator.userAgent.indexOf('Linux') != -1) {
+        console.log('Linux');
+        rows = csv.split("\n");
+    }
 
     return rows.map(function (row) {
     	return row.split(";");
@@ -61,6 +67,13 @@ function csvToArray (csv) {
 // this function provides easy printing of values to the console by pressing a button
 function debugPrinter()
 {   
+    // Reset class objects containers
+    Actions = [];
+    Tasks = [];
+    Semaphores =[];
+    SemaphoreGroups = [];
+    Mutexes = [];
+
     convertToObjectBaseValue(arrayFromCSV);
     createSemaphoreObjects();
     createSemaphoreGroupObjects();
@@ -97,6 +110,15 @@ function removeDuplicates(arr)
 
 function convertToObjectBaseValue(convertedCSVArray){
     console.log("convertedCSVArray",convertedCSVArray);
+
+    // Clear all arrays needed for this function
+    actionArray = [];
+    taskArray = [];
+    semaphoreArray = [];
+    mutexArray = [];
+    mutexActionArray = [];
+    semaphoreGroupArray = [];
+
     // start with 1 as the first line are the column names
     for (let i = 1; i < convertedCSVArray.length; i++)
     {

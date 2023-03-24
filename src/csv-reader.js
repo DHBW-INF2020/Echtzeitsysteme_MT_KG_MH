@@ -1,21 +1,10 @@
-// print the CSV Data to the Document for Debugging
-
-
 const fileInput = document.getElementById('csv-file-input')
 const convertButton = document.getElementById('convert-csv');
 const debugButton = document.getElementById('debug-printer');
 const changeCSVSettings = document.getElementById('change-csv-settings');
-
-
 const csvColumnSettings = document.getElementById('csv-column-settings');
 
-
-
-
-
-
 let tableRowLength = 0;
-
 let tableValueLocation = [
     [1,"actionBeginColumn",1],
     [2,"actionEndColumn",4],
@@ -26,10 +15,8 @@ let tableValueLocation = [
     [7,"mutexActionBeginColumn",15],
     [8,"mutexActionEndColumn",16],
 ];
-
 let fileContent = "";
 let arrayFromCSV = [];
-
 let actionArray = [];
 let taskArray = [];
 let semaphoreArray = [];
@@ -44,35 +31,42 @@ let Semaphores =[];
 let SemaphoreGroups = [];
 let Mutexes = [];
 
+//================================================================================================
+
+const readFile = () => {
+    const reader = new FileReader()
+    reader.onload = () => {
+        fileContent = fileContent + reader.result;
+        document.getElementById('out').innerHTML = reader.result
+        console.log(fileContent);
+        // Write File Content to 2D Array
+        arrayFromCSV = csvToArray(fileContent);
+    }
+
+    // start reading the file. When it is done, calls the onload event defined above.
+    reader.readAsBinaryString(fileInput.files[0])
+}
+
+// converts a csv string into a 2D Array
+function csvToArray (csv) {
+    rows = csv.split("\r\n");
+
+    return rows.map(function (row) {
+    	return row.split(";");
+    });
+};
 
 //================================================================================================
 
 // this function provides easy printing of values to the console by pressing a button
 function debugPrinter()
 {   
-    // Reset all
-    /*
-    actionArray = [];
-    taskArray = [];
-    semaphoreArray = [];
-    mutexArray = [];
-    mutexActionArray = [];
-    semaphoreGroupArray = [];
-    Actions = [];
-    Tasks = [];
-    Semaphores =[];
-    SemaphoreGroups = [];
-    Mutexes = [];
-    console.log(arrayFromCSV);
-    */
-
     convertToObjectBaseValue(arrayFromCSV);
     createSemaphoreObjects();
     createSemaphoreGroupObjects();
     createMutexObjects();
     createActionObjects();
     createTaskObjects();
-
 }
 
 function changeCSVDefaultValues()
@@ -91,15 +85,6 @@ function changeCSVDefaultValues()
     console.log(tableValueLocation)
 }
 
-// converts a csv string into a 2D Array
-function csvToArray (csv) {
-    rows = csv.split("\r\n");
-
-    return rows.map(function (row) {
-    	return row.split(";");
-    });
-};
-
 
 // remove duplicates from Array
 //SRC: https://www.naukri.com/learning/articles/remove-duplicates-javascript-array/
@@ -107,28 +92,6 @@ function removeDuplicates(arr)
 {
     return arr.filter((item, index) => arr.indexOf(item) === index)
 }
-
-
-//================================================================================================
-
-const readFile = () => {
-    const reader = new FileReader()
-    reader.onload = () => {
-        fileContent = fileContent + reader.result;
-        document.getElementById('out').innerHTML = reader.result
-        console.log(fileContent);
-        // Write File Content to 2D Array
-        arrayFromCSV = csvToArray(fileContent);
-    }
-
-    // start reading the file. When it is done, calls the onload event defined above.
-    reader.readAsBinaryString(fileInput.files[0])
-}
-
-
-
-
-
 
 //================================================================================================
 
@@ -179,9 +142,6 @@ function convertToObjectBaseValue(convertedCSVArray){
     
         //=================== creating the Semaphore Group Array =========================
         semaphoreGroupArray.push(convertedCSVArray[i][11]);
-
-        
-
     }
     mutexArray = removeDuplicates(mutexArray);
     semaphoreGroupArray = removeDuplicates(semaphoreGroupArray);
@@ -215,19 +175,12 @@ function createSemaphoreObjects()
     {
         if(!(semaphoreArray[i][0]===""))
         {
-        // get the semaphore ID and initial Value from the Semaphore Array
-        Semaphores.push(new Semaphore(parseInt(semaphoreArray[i][0]),
-                                      parseInt(semaphoreArray[i][4]),
-                                      parseInt(semaphoreArray[i][3]),
-                                      parseInt(semaphoreArray[i][1]),
-                                      parseInt(semaphoreArray[i][2])))
-        // Debug
-        /*console.log("Semaphore Werte:", 
-                    "ID:",parseInt(semaphoreArray[i][0]),
-                    "Value:", parseInt(semaphoreArray[i][4]),
-                    "Gruppe: ",parseInt(semaphoreArray[i][3]),
-                    "startwert: ",parseInt(semaphoreArray[i][1]),
-                    "endwert: ", parseInt(semaphoreArray[i][2]))*/
+            // get the semaphore ID and initial Value from the Semaphore Array
+            Semaphores.push(new Semaphore(parseInt(semaphoreArray[i][0]),
+                                        parseInt(semaphoreArray[i][4]),
+                                        parseInt(semaphoreArray[i][3]),
+                                        parseInt(semaphoreArray[i][1]),
+                                        parseInt(semaphoreArray[i][2])))
         }
     }
     // Debug
@@ -270,7 +223,6 @@ function createSemaphoreGroupObjects()
             SemaphoreGroups.push(new SemaphoreGroup(parseInt(semaphoreGroupArray[i][0]),tempArray))
         }
     }
-
     // DEBUG
     console.log("SemaphoreGroups: ", SemaphoreGroups)
 }

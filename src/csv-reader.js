@@ -224,12 +224,34 @@ function createSemaphoreObjects()
     {
         if(!(semaphoreArray[i][0]===""))
         {
+            let validSemaphoreStart = false;
+            let validSemaphoreEnd = false;
+            for(let j = 0; j < actionArray.length; j++)
+            {
+                
+                if(parseInt(semaphoreArray[i][1]) == parseInt(actionArray[j][0]))
+                {
+                    validSemaphoreStart = true;
+                }
+                if( parseInt(semaphoreArray[i][2]) == parseInt(actionArray[j][0]))
+                {
+                    validSemaphoreEnd = true;
+                }
+            }
+
+            if (!validSemaphoreStart || !validSemaphoreEnd)
+            {
+                let note = "Semaphore with ID " + semaphoreArray[i][0] + " has invalid Connection Points"
+                addNewMessage("ERROR", note, "r");
+            }
+            else{
             // get the semaphore ID and initial Value from the Semaphore Array
             Semaphores.push(new Semaphore(parseInt(semaphoreArray[i][0]),
                                         parseInt(semaphoreArray[i][4]),
                                         parseInt(semaphoreArray[i][3]),
                                         parseInt(semaphoreArray[i][1]),
                                         parseInt(semaphoreArray[i][2])))
+            }
         }
     }
 }
@@ -258,7 +280,6 @@ function createSemaphoreGroupObjects()
             let tempArray = [];
             for(let j = 0; j < Semaphores.length; j++)
             {
-                // console.log(Semaphores[j].semaphoreGroup,parseInt(semaphoreGroupArray[i][0]))
                 if(Semaphores[j].group == parseInt(semaphoreGroupArray[i]))
                 {
                     tempArray.push(Semaphores[j]);

@@ -1,5 +1,20 @@
 const messageField = document.getElementById('message-collector-field')
 
+
+/**
+* Function Name.        addNewMessage() 
+* Summary.              
+* This Function will add a new Message to the Message board 
+* It should be used to inform the user about errors in the data or important events in the simulation
+*
+*
+* @param {string} message_type -> NOTIFICATION, ERROR, ...
+* @param {string} message_content -> Message for the User 
+* @param {string} alert_color -> options: green, red, yellow -> will default to white 
+* 
+* @author.     MH
+*
+*/
 function addNewMessage(message_type, message_content, alert_color)
 {
     let content = String(message_type) + ': ' + String(message_content);

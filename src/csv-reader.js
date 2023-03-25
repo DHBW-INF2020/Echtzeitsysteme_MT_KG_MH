@@ -329,6 +329,7 @@ function createActionObjects()
 {
     for (let i = 0; i < actionArray.length; i++)
     {
+
         // check if empty
         if(!(actionArray[i][0]===""))
         {
@@ -395,24 +396,33 @@ function createActionObjects()
                 }
             }
 
+            // This Codeblock determines whether an Action is valid by checking its dependency on Tasks
+            let actionValid = false;
+            for(let j = 0; j < taskArray.length; j++)
+            {
+                if(parseInt(taskArray[j][0])==parseInt(actionArray[i][2]))
+                {
+                    actionValid = true;
+                }
+            }
 
-            // get the semaphore ID and initial Value from the Semaphore Array
-            // Helper: 
-            // Action(
-            //    int: id, 
-            //    string: action_name, 
-            //    int: action_steps, 
-            //    Semaphore Array: semaphores_in, 
-            //    Semaphore Array:semaphores_out, 
-            //    Mutex Array:mutex_list
-            //    )
-            Actions.push(new Action(parseInt(actionArray[i][0]),
+            if(!actionValid)
+            {
+                let note = "Action " + actionArray[i][0] + " cant be created due to missing or wrong values";
+                addNewMessage("WARNING: ",note,"r");
+                return;
+            }
+            // create Actions if its valid
+            else
+            {
+                Actions.push(new Action(parseInt(actionArray[i][0]),
                                                 actionArray[i][1], 
                                                 parseInt(actionArray[i][3]), 
                                                 semaphoreGroupIn, 
                                                 semaphoreOut, 
                                                 mutexList,
                                                 parseInt(actionArray[i][2])))
+            }
         }
     }
 }

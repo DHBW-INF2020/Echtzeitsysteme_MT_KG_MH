@@ -29,9 +29,8 @@ function startTimedSimulation()
 
 {   if(!timedSimulationRunning)
     {
-        console.log(slider.value)
         timerStopStart.innerHTML = "Stop Simulation"
-        intervalID = setInterval(testSimulation, 1000 * slider.value);
+        intervalID = setInterval(testSimulation, 1000 / slider.value);
         timedSimulationRunning = true;
     }
     else

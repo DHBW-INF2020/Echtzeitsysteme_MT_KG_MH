@@ -63,6 +63,9 @@ function csvToArray (csv) {
     } else if (navigator.userAgent.indexOf('Linux') != -1) {
         console.log('Linux');
         rows = csv.split("\n");
+    }else if (navigator.userAgent.indexOf('Mac') != -1) {
+        console.log('Mac');
+        rows = csv.split("\n");
     }
 
     return rows.map(function (row) {

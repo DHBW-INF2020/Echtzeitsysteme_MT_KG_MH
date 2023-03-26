@@ -5,6 +5,8 @@ simulationButton.addEventListener('click', testSimulation);
 const timerStopStart = document.getElementById('timer');
 timerStopStart.addEventListener('click', startTimedSimulation)
 
+const slider = document.getElementById("slider");
+
 diagram = null;
 
 function initProgram(){
@@ -21,15 +23,15 @@ function testSimulation()
     showDiagram(diagram);
 }
 
-
 let timedSimulationRunning = false;
 let intervalID = 0;
 function startTimedSimulation()
 
 {   if(!timedSimulationRunning)
     {
+        console.log(slider.value)
         timerStopStart.innerHTML = "Stop Simulation"
-        intervalID = setInterval(testSimulation, 1000);
+        intervalID = setInterval(testSimulation, 1000 * slider.value);
         timedSimulationRunning = true;
     }
     else

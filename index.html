@@ -4,59 +4,62 @@
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
 <html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Echtzeitsysteme</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="style/main.css">
-        <!-- External Scripts and Libraries -->
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-csv/1.0.11/jquery.csv.min.js"></script>
-        <!--goJS-->
-        <script src="https://unpkg.com/gojs@2.3.3/release/go.js"></script>
-        <script src="https://unpkg.com/gojs@2.3.3/extensions/Figures.js"></script>
-        <script src="https://unpkg.com/gojs@2.3.3/extensions/RoundedRectangles.js"></script>
-        <!-- internal Scripts -->
-        
-    </head>
-    <body onload="initProgram()">
-        
-        <div class="content-container">
-            <div id="simulation-container">
-                <div class="simulation-container-header">
-                    <input type="file" class="file-input-csv" id="csv-file-input" name="csv-file-input" accept=".csv">
-                    <button id="convert-csv">Initialize</button>
-                    <button id="simulator">Step</button>
-                    <button id="timer">Start Simulation</button>
-                </div>
 
-                <!--goJS Canvas-->
-                <div id="myDiagramDiv" class="go-js-canvas"></div>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Echtzeitsysteme</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="style/main.css">
+    <!-- External Scripts and Libraries -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-csv/1.0.11/jquery.csv.min.js"></script>
+    <!--goJS-->
+    <script src="https://unpkg.com/gojs@2.3.3/release/go.js"></script>
+    <script src="https://unpkg.com/gojs@2.3.3/extensions/Figures.js"></script>
+    <script src="https://unpkg.com/gojs@2.3.3/extensions/RoundedRectangles.js"></script>
+    <!-- internal Scripts -->
+
+</head>
+
+<body onload="initProgram()">
+
+    <div class="content-container">
+        <div id="simulation-container">
+            <div class="simulation-container-header">
+                <input type="file" class="file-input-csv" id="csv-file-input" name="csv-file-input" accept=".csv">
+                <button id="convert-csv">Initialize</button>
+                <button id="simulator">Step</button>
+                <button id="timer">Start Simulation</button>
+                <input id="slider" type="range" min="1" max="10" value="1" class="slider" id="myRange">
             </div>
-            <div id="message-container">
-                <div class="message-header">
-                    Messages
-                </div>
-                <div id="message-collector-field" class="message-collector">
-                    
-                </div>
+
+            <!--goJS Canvas-->
+            <div id="myDiagramDiv" class="go-js-canvas"></div>
+        </div>
+        <div id="message-container">
+            <div class="message-header">
+                Messages
+            </div>
+            <div id="message-collector-field" class="message-collector">
+
             </div>
         </div>
+    </div>
 
-        
-        
 
-        
 
-        <!-- internal scripts -->
-        <script src="src/diagramm-classes.js" async defer></script>
-        <script src="src/csv-reader.js" async defer></script>
-        <script src="src/gojs-viewer.js" async defer></script>
-        <script src="src/simulation.js"async defer></script>
-        <script src="src/message-broker.js" async defer></script>
 
-    </body>
-    
+
+
+    <!-- internal scripts -->
+    <script src="src/diagramm-classes.js" async defer></script>
+    <script src="src/csv-reader.js" async defer></script>
+    <script src="src/gojs-viewer.js" async defer></script>
+    <script src="src/simulation.js" async defer></script>
+    <script src="src/message-broker.js" async defer></script>
+
+</body>
+
 </html>

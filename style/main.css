@@ -2,6 +2,7 @@
     --diag-content-width: 40vw;
     --error-message-width: 15vw;
     --header-height: 26px;
+    --simulation-height: 70vh;
 }
 
 body{
@@ -31,7 +32,7 @@ body{
 
 .go-js-canvas{
      
-    height: 70vh; 
+    height: var(--simulation-height); 
     background-color: #ffffff;
     border: 1px solid black;
     border-radius: 10px;
@@ -68,6 +69,9 @@ body{
     margin-top: 20px;
     margin-left: 10px;
     padding: 10px;
+
+    overflow-y: scroll;
+    max-height: var(--simulation-height);
 }
 
 .input-element{

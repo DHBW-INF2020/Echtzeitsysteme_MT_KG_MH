@@ -43,6 +43,8 @@ body{
     padding: 1vw;
     border-radius: 0.5vw;
     height: var(--header-height);
+    align-items: center;
+    display: flex;
 }
 
 .message-container{
@@ -66,4 +68,8 @@ body{
     margin-top: 20px;
     margin-left: 10px;
     padding: 10px;
+}
+
+.input-element{
+    margin-left: 10px;
 }

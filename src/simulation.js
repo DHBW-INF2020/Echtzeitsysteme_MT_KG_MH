@@ -7,11 +7,17 @@ timerStopStart.addEventListener('click', startTimedSimulation)
 
 const slider = document.getElementById("slider");
 
+const intervalSpeed = document.getElementById("interval-indicator")
+
 diagram = null;
 
 function initProgram(){
     console.log("initProgram");
     diagram = createDiagram();
+    // disable all Buttons until they are enabled
+    document.getElementById("convert-csv").disabled = true;
+    document.getElementById("simulator").disabled = true;
+    document.getElementById("timer").disabled = true;
 }
 
 function testSimulation()
@@ -25,12 +31,14 @@ function testSimulation()
 
 let timedSimulationRunning = false;
 let intervalID = 0;
+let intervalLength = 0;
 function startTimedSimulation()
-
-{   if(!timedSimulationRunning)
+{   
+    intervalLength = 1000 / slider.value;
+    if(!timedSimulationRunning)
     {
         timerStopStart.innerHTML = "Stop Simulation"
-        intervalID = setInterval(testSimulation, 1000 / slider.value);
+        intervalID = setInterval(testSimulation, intervalLength);
         timedSimulationRunning = true;
     }
     else
@@ -40,4 +48,21 @@ function startTimedSimulation()
         timedSimulationRunning = false;
     }
     
+}
+
+
+slider.onchange = function()
+{
+    intervalLength = 1000 / slider.value;
+    if(intervalID)
+    {
+        clearInterval(intervalID);
+        if(timedSimulationRunning)
+        {
+            intervalID = setInterval(testSimulation, intervalLength);
+        }
+    }
+
+    let note = parseInt(intervalLength) + " Millisekunden pro Schritt"
+    intervalSpeed.innerHTML = note;
 }

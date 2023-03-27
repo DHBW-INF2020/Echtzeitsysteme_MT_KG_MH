@@ -93,6 +93,11 @@ function validateFileType() {
         fileInput.value = '';
         return false;
     }
+    else
+    {
+        // enable Simulation-Initilazation
+        document.getElementById("convert-csv").disabled = false;
+    }
 }
 
 //================================================================================================
@@ -117,6 +122,10 @@ function initFromCSV()
     createMutexObjects();
     createActionObjects();
     createTaskObjects();
+
+    // enable Simulation
+    document.getElementById("simulator").disabled = false;
+    document.getElementById("timer").disabled = false;
 }
 
 function changeCSVDefaultValues()

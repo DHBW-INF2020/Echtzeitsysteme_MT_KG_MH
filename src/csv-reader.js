@@ -421,7 +421,7 @@ function createActionObjects()
             if(!actionValid)
             {
                 let note = "Action " + actionArray[i][0] + " cant be created due to missing or wrong values";
-                addNewMessage("WARNING: ",note,"r");
+                addNewMessage("WARNING ",note,"r");
                 return;
             }
             // create Actions if its valid

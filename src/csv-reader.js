@@ -65,7 +65,7 @@ function csvToArray (csv) {
         rows = csv.split("\n");
     }else if (navigator.userAgent.indexOf('Mac') != -1) {
         console.log('Mac');
-        rows = csv.split("\n");
+        rows = csv.split("\r\n");
     }
 
     return rows.map(function (row) {

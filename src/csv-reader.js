@@ -401,7 +401,16 @@ function createActionObjects()
                             // if Mutex belongs to Action append it to its Mutex List
                             if(Mutexes[l].id == mutexActionArray[j][1])
                             {
-                                mutexList.push(Mutexes[l])
+                                let oldLength = mutexList.length;
+                                mutexList.push(Mutexes[l]);
+                                mutexList = removeDuplicates(mutexList)
+
+                                if(oldLength === mutexList.length)
+                                {
+                                    console.log("ACtionArray:", actionArray[i])
+                                    let note = "Action with ID " + actionArray[i][0] + " has multiple connections to Mutex with ID " + Mutexes[l].id;
+                                    addNewMessage("WARNING", note, "y"); 
+                                }
                             }
                         }
                     }

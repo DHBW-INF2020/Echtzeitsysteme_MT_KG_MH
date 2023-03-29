@@ -157,6 +157,27 @@ function createMutexLink(diagram){
     );
 }
 
+function createTaskLink(diagram){
+    // Define the semaphore links
+    diagram.linkTemplateMap.add("TaskLink",
+        goMake(go.Link,
+            //{ routing: go.Link.AvoidsNodes, corner: 10 },
+            //{ curve: go.Link.Bezier },
+            goMake(go.Shape, 
+                new go.Binding("stroke", "isActive", x => x == true ? ACTIVE_SEMAPHORE_COLOR : PASSIVE_SEMAPHORE_COLOR)
+            ),
+            goMake(go.Shape, 
+                { toArrow: "Boomerang", stroke:null, strokeWidth: 3},
+                new go.Binding("fill", "isActive", x => x == true ? ACTIVE_SEMAPHORE_COLOR : PASSIVE_SEMAPHORE_COLOR)    
+            ),
+            goMake(go.TextBlock,
+                { segmentOffset: new go.Point(0, 10) },
+                new go.Binding("text", "count")
+            )
+        )
+    );
+}
+
 function createExample(diagram){
     // Create a dummy model
     diagram.model = new go.GraphLinksModel([
@@ -213,19 +234,42 @@ function addMutexNodes(nodes){
     }
 }
 
+function getTaskIdOfAction(actionId){
+    for(let i = 0; i < Actions.length; i++){
+        if (Actions[i].id == actionId){
+            return Actions[i].taskAssignment;
+        }
+    }
+}
+
+function getCategoryName(startingpoint, endpoint){
+    startingpointTaskId = getTaskIdOfAction(startingpoint);
+    endpointTaskId = getTaskIdOfAction(endpoint);
+    console.log("startingpoint", startingpointTaskId,
+                "endpoint", endpointTaskId);
+    categoryName = "";
+    if(startingpointTaskId==endpointTaskId){
+        categoryName="TaskLink";
+    }else{
+        categoryName="SemaphoreLink";
+    }
+    return categoryName;
+}
+
 function addSempahoreLinksAndNodes(nodes, links){
     for(semaphoreGroupNum = 0; semaphoreGroupNum < SemaphoreGroups.length; semaphoreGroupNum++)
     {
         semaphores = SemaphoreGroups[semaphoreGroupNum].semaphores
         if(semaphores.length == 1){
             currentSemaphore = semaphores[0];
+            categoryName = getCategoryName(currentSemaphore.startingpoint, currentSemaphore.endpoint);
             links.push(
                 {
                     from: "s"+currentSemaphore.startingpoint, 
                     to: "s"+currentSemaphore.endpoint,
                     isActive: (currentSemaphore.value > 0),
                     count: currentSemaphore.value,
-                    category: "SemaphoreLink"
+                    category: categoryName
                 }
             );
         }
@@ -310,6 +354,7 @@ function createDiagram(){
     createSempahoreOrNodeTemplate(diagram);
     createSemaphoreLink(diagram);
     createMutexLink(diagram);
+    createTaskLink(diagram);
     return diagram
 }
 

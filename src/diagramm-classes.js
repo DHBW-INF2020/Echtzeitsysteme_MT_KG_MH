@@ -156,10 +156,6 @@ class Action{
         {
             this.semaphoresOut[i].up()
         }
-        for(let j =0; j < this.semaphoreGroupIn.length; j++)
-        {
-            this.semaphoreGroupIn[j].combinedSemaphoreValue();
-        }
         // release Mutexes
         this.releaseResources();
         this.currentSteps = 0;

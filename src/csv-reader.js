@@ -240,6 +240,7 @@ function createSemaphoreObjects()
             let validSemaphoreID = false
             let validSemaphoreStart = false;
             let validSemaphoreEnd = false;
+            let validSemaphoreCombined
             for(let j = 0; j < actionArray.length; j++)
             {
                 
@@ -255,8 +256,11 @@ function createSemaphoreObjects()
                 {
                     validSemaphoreID = true;
                 }
+                if(isNaN(parseInt(semaphoreArray[i][3])))
+                {
+                    validSemaphoreCombined = true;
+                }
             }
-            console.log(semaphoreArray[i])
             if(validSemaphoreID)
             {
                 let note = "ID of Semaphore with ID " + semaphoreArray[i][0] + " is invalid"
@@ -265,9 +269,14 @@ function createSemaphoreObjects()
             if (!validSemaphoreStart || !validSemaphoreEnd)
             {
                 let note = "Semaphore with ID " + semaphoreArray[i][0] + " has invalid Connection Points"
-                addNewMessage("ERROR", note, "r");
+                addNewMessage("WARNING", note, "y");
             }
-            else{
+            if(validSemaphoreCombined)
+            {
+                let note = "Combination of Semaphore with ID " + semaphoreArray[i][0] + " is invalid"
+                addNewMessage("WARNING", note, "y")
+            }
+            if(!validSemaphoreID || validSemaphoreStart || validSemaphoreEnd || !validSemaphoreCombined){
             // get the semaphore ID and initial Value from the Semaphore Array
             Semaphores.push(new Semaphore(parseInt(semaphoreArray[i][0]),
                                         parseInt(semaphoreArray[i][4]),
@@ -423,7 +432,6 @@ function createActionObjects()
 
                                 if(oldLength === mutexList.length)
                                 {
-                                    console.log("ACtionArray:", actionArray[i])
                                     let note = "Action with ID " + actionArray[i][0] + " has multiple connections to Mutex with ID " + Mutexes[l].id;
                                     addNewMessage("WARNING", note, "y"); 
                                 }

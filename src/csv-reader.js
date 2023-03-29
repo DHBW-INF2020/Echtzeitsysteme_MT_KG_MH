@@ -49,6 +49,7 @@ const readFile = () => {
 
     reader.onloadend = () => {
         initFromCSV();
+        showDiagram(diagram);
     }
 }
 

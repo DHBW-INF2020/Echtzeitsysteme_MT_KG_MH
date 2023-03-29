@@ -469,13 +469,29 @@ function createActionObjects()
             // create Actions if its valid
             else
             {
-                Actions.push(new Action(parseInt(actionArray[i][0]),
+                if(actionArray[i][3] == String(parseInt(actionArray[i][3])))
+                {
+                    Actions.push(new Action(parseInt(actionArray[i][0]),
                                                 actionArray[i][1], 
                                                 parseInt(actionArray[i][3]), 
                                                 semaphoreGroupIn, 
                                                 semaphoreOut, 
                                                 mutexList,
                                                 parseInt(actionArray[i][2])))
+                }
+                else
+                {
+                    let note = "Action with ID " + actionArray[i][0] + " has StepValue as mathematical expression";
+                    addNewMessage("WARNING",note,"y");
+                    Actions.push(new Action(parseInt(actionArray[i][0]),
+                                                actionArray[i][1], 
+                                                parseInt(actionArray[i][3]), 
+                                                semaphoreGroupIn, 
+                                                semaphoreOut, 
+                                                mutexList,
+                                                parseInt(actionArray[i][2])))
+                }
+                
             }
         }
     }

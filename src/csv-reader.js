@@ -488,7 +488,16 @@ function createTaskObjects()
                     tempActionArray.push(Actions[j]);
                 }
             }
-            Tasks.push(new Task(parseInt(taskArray[i][0]),taskArray[i][1],tempActionArray))
+            if(!isNaN(parseInt(taskArray[i][0])))
+            {
+                Tasks.push(new Task(parseInt(taskArray[i][0]),taskArray[i][1],tempActionArray))
+            }
+            else
+            {
+                let note = "ID for Task with ID " + taskArray[i][0] + " is invalid"
+                addNewMessage("WARNING", note, "y")
+            }
+            
         }
     }
 }

@@ -26,6 +26,9 @@ function testSimulation()
     {
         Actions[i].takeStep();
     }
+    for(let i = 0; i < SemaphoreGroups.length; i++){
+        SemaphoreGroups[i].combinedSemaphoreValue();
+    }
     showDiagram(diagram);
 }
 

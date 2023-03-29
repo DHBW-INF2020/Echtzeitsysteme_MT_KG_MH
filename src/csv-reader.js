@@ -237,6 +237,7 @@ function createSemaphoreObjects()
     {
         if(!(semaphoreArray[i][0]===""))
         {
+            let validSemaphoreID = false
             let validSemaphoreStart = false;
             let validSemaphoreEnd = false;
             for(let j = 0; j < actionArray.length; j++)
@@ -250,8 +251,17 @@ function createSemaphoreObjects()
                 {
                     validSemaphoreEnd = true;
                 }
+                if(isNaN(parseInt(semaphoreArray[i][0])))
+                {
+                    validSemaphoreID = true;
+                }
             }
-
+            console.log(semaphoreArray[i])
+            if(validSemaphoreID)
+            {
+                let note = "ID of Semaphore with ID " + semaphoreArray[i][0] + " is invalid"
+                addNewMessage("WARNING", note, "y")
+            }
             if (!validSemaphoreStart || !validSemaphoreEnd)
             {
                 let note = "Semaphore with ID " + semaphoreArray[i][0] + " has invalid Connection Points"

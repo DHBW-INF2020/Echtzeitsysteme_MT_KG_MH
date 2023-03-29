@@ -55,6 +55,15 @@ const readFile = () => {
 
 convertButton.addEventListener('click',readFile);
 
+function filterBlankLines(textArray){
+    filteredArray = [];
+    for(let i = 0; i < textArray.length; i++){
+        if(textArray[i] != ""){
+            filteredArray.push(textArray[i]);
+        }
+    }
+    return filteredArray;
+}
 
 // converts a csv string into a 2D Array
 function csvToArray (csv) {
@@ -68,8 +77,9 @@ function csvToArray (csv) {
         console.log('Mac');
         rows = csv.split("\r\n");
     }
+    filteredRows = filterBlankLines(rows);
 
-    return rows.map(function (row) {
+    return filteredRows.map(function (row) {
     	return row.split(";");
     });
 };

@@ -320,10 +320,15 @@ function createMutexObjects()
 {
     for (let i = 0; i < mutexArray.length; i++)
     {
-        if(!(mutexArray[i]===""))
+        if(!(mutexArray[i]==="") && !isNaN(parseInt(mutexArray[i])))
         {
-            // get the semaphore ID and initial Value from the Semaphore Array
+            // get the Mutex ID and initial Value from the Mutex Array
             Mutexes.push(new Mutex(parseInt(mutexArray[i])))
+        }
+        else if(!(mutexArray[i]==="") && isNaN(parseInt(mutexArray[i])))
+        {
+            let note = "ID of Mutex with ID " + mutexArray[i] + " is invalid";
+            addNewMessage("WARNING", note, "y");
         }
     }
 }
@@ -431,7 +436,7 @@ function createActionObjects()
             if(!actionValid)
             {
                 let note = "Action " + actionArray[i][0] + " cant be created due to missing or wrong values";
-                addNewMessage("WARNING ",note,"r");
+                addNewMessage("WARNING ",note,"y");
                 return;
             }
             // create Actions if its valid

@@ -28,7 +28,8 @@ function createDigramFromScratch(){
                 // )
                 layout: goMake(go.LayeredDigraphLayout, 
                     { alignOption: go.LayeredDigraphLayout.AlignAll, layerSpacing: 50, iterations: 4, setsPortSpots: false}
-                )
+                ),
+                isReadOnly: true,  // don't allow move or delete
             }
         );
     // Disable the intital fade animation which is shown when loading the diagram

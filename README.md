@@ -1,7 +1,9 @@
 # Echtzeitsysteme_MT_KG_MH
 
 Prüfungsleistung in Echzeitsysteme
-Test
 
-Test Cases:
-- [ ] Namen länger als 30 Zeichen
+Der Simulator kann einfach via index.html gestartet werden. Verwendet wird dazu goJS
+
+Auf der Website wird eine CSV Datei hochgeladen (im Ordner Data)
+
+Dann muss die Simulation initialisiert werden und kann anschliesend gestartet werden
